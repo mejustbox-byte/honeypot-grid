@@ -20,8 +20,7 @@ Latest local acceptance (2026-10-09): cloud_check.sh exit 0 under umask 0077 on 
 
 Repeat verification (2026-10-09, main a175a55): 129 tests, Ruff lint/format, 16 documents/60 links, installed CLI smoke, wheel/sdist, fresh wheel installation and CLI outside checkout, private-umask key regression and shell syntax checks passed. Lab preflight exit 2: no Docker/QEMU/socket/KVM, root account and no approved boot artifacts. This is current-container evidence, not a saved Cloud snapshot restore or real lab acceptance. No stable release is justified by these checks.
 
-Budget decision (2026-10-09): no budget is available for paid cloud resources.
-Do not provision paid VMs/subscriptions. The owner will supply an existing or
+Lab infrastructure is supplied by the owner using an existing or
 local dedicated Linux lab and perform the real acceptance steps in
-[LOCAL-PC.md](LOCAL-PC.md). Deferred checks remain not-run; this decision does
+[LOCAL-PC.md](LOCAL-PC.md). Deferred checks remain not-run; delegating lab preparation does
 not waive stable gates or promote v0.1.0-alpha.1 to stable.
