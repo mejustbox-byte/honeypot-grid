@@ -2,7 +2,7 @@
 
 ## Что доступно сейчас
 
-Реализованы offline CLI и mock-менеджер. Готовых images, Compose-манифестов и runtime enforcement нет. Все команды ниже работают с локальной SQLite-базой; никакие приманки не запускаются.
+Доступны установленный CLI, offline pipeline и opt-in Docker network-none адаптер. Актуальные параметры и ограничения приведены в [RUNBOOK.md](RUNBOOK.md).
 
 ```sh
 git clone https://github.com/mejustbox-byte/honeypot-grid.git
@@ -37,25 +37,26 @@ uv run --locked pytest -q
 uv run --locked python scripts/smoke.py
 ```
 
-Проект не имеет сторонних runtime-зависимостей. uv.lock фиксирует инструменты разработки и транзитивные зависимости. CLI запускается из корня checkout; установка системного пакета/console entry point пока не предоставляется.
+Проект не имеет сторонних runtime-зависимостей. uv.lock фиксирует инструменты разработки и транзитивные зависимости. CLI установлен как honeypot-grid и работает вне checkout.
 
 ## Mock workflow
 
 Scope — доверенный локальный файл оператора. Не берите его из телеметрии. Пример допускает только синтетический `http-mock` и фиктивный digest.
 
 ```sh
-uv run --locked python -m honeypot_grid --database demo.sqlite3 plan --config examples/lab.json --scope examples/scope.json > plan.json
+mkdir -m 700 lab-private
+uv run --locked python -m honeypot_grid --database lab-private/demo.sqlite3 plan --config examples/lab.json --scope examples/scope.json > plan.json
 ```
 
 Просмотрите полный `plan.json`, затем скопируйте `plan_hash` в следующие команды вместо `PLAN_HASH`. Подтверждение действует не дольше 300 секунд и только для владельца `lab-operator`:
 
 ```sh
-uv run --locked python -m honeypot_grid --database demo.sqlite3 approve --plan-hash PLAN_HASH --operator lab-operator
-uv run --locked python -m honeypot_grid --database demo.sqlite3 apply --plan plan.json --scope examples/scope.json --operator lab-operator
-uv run --locked python -m honeypot_grid --database demo.sqlite3 status
-uv run --locked python -m honeypot_grid --database demo.sqlite3 audit
-uv run --locked python -m honeypot_grid --database demo.sqlite3 stop --plan-hash PLAN_HASH --operator lab-operator
-uv run --locked python -m honeypot_grid --database demo.sqlite3 expire
+uv run --locked python -m honeypot_grid --database lab-private/demo.sqlite3 approve --plan-hash PLAN_HASH --operator lab-operator
+uv run --locked python -m honeypot_grid --database lab-private/demo.sqlite3 apply --plan plan.json --scope examples/scope.json --operator lab-operator
+uv run --locked python -m honeypot_grid --database lab-private/demo.sqlite3 status
+uv run --locked python -m honeypot_grid --database lab-private/demo.sqlite3 audit
+uv run --locked python -m honeypot_grid --database lab-private/demo.sqlite3 stop --plan-hash PLAN_HASH --operator lab-operator
+uv run --locked python -m honeypot_grid --database lab-private/demo.sqlite3 expire
 uv run --locked python -m honeypot_grid aggregate --events examples/events.json
 ```
 
@@ -65,7 +66,7 @@ uv run --locked python -m honeypot_grid aggregate --events examples/events.json
 
 `--operator` — декларация доверенного локального оператора, не аутентификация. Защитите scope, базу и checkout разрешениями ОС; совместный доступ недоверенных пользователей не поддерживается. Approval относится только к mock-действию. Эти файлы не должны содержать credentials.
 
-Агрегация принимает только пять полей нормализованной синтетической схемы, отклоняет дополнительные поля, удаляет sensor ID, укрупняет время до дня и экспортирует группы с количеством >=5. Это не полноценная анонимизация и не разрешение на публикацию: результат требует ручного privacy review. Raw ingest, HMAC, retention и публичный IoC export отложены.
+Агрегация принимает только пять полей нормализованной синтетической схемы, отклоняет дополнительные поля, удаляет sensor ID, укрупняет время до дня и экспортирует группы с количеством >=5. Это не полноценная анонимизация и не разрешение на публикацию: результат требует ручного privacy review. Дополнительные ingest/HMAC/retention и подтверждаемый синтетический IoC export описаны в RUNBOOK.md.
 
 ## Тестирование
 

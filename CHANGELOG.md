@@ -40,3 +40,12 @@
 - Синтетическая batch-агрегация, allowlist полей и подавление малых групп.
 - Python 3.14.7, uv 0.12.19, pytest 9.1.1, Ruff 0.16.10, uv.lock и CI с SHA-pinned Actions.
 - Реальные VM/контейнеры, сетевой enforcement, автоматический scheduler, внешняя аутентификация и публикация телеметрии не включены.
+
+## Lab components (unreleased)
+
+- Приватные SQLite/key файлы, квоты и устойчивое обнаружение отката часов.
+- HMAC telemetry, retention, синтетические HTTP/SSH sensors и opt-in Docker network-none saga/recovery.
+- Непрозрачный карантин, bounded static metadata worker, план sandbox без доступного VM executor.
+- Offline анализ, schema-bound proposal validation и hash-bound одноразовый review/export.
+- Устанавливаемый CLI, wheel/sdist, CLI integration smoke и исправленный приватный путь CI.
+- Docker/VM containment не проверен; открытые gates перечислены в RUNBOOK.md.

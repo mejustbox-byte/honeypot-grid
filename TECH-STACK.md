@@ -17,7 +17,7 @@
 | CI | GitHub Actions на Linux, минимальные read permissions | Smoke/docs → lint/types/unit → изолированные integration по мере появления кода |
 | Хранение MVP | Локальные JSON-схемы и SQLite для состояния | Простая эксплуатация; production multi-tenancy требует отдельного решения |
 
-MVP pins: CPython 3.14.7 (.python-version), uv 0.12.19, pytest 9.1.1, Ruff 0.16.10 (pyproject.toml и uv.lock). Runtime-зависимостей нет; lock включает dev tools и транзитивные зависимости с hashes. GitHub Actions checkout v4.2.2 и setup-python v5.6.0 закреплены на проверенные SHA в CI. Образы пока не используются; синтетический digest в примере не относится к реальному image. Не использовать floating latest images в будущей лаборатории.
+MVP pins: CPython 3.14.7 (.python-version), uv 0.12.19, pytest 9.1.1, Ruff 0.16.10 (pyproject.toml и uv.lock). Runtime-зависимостей нет; lock включает dev tools и транзитивные зависимости с hashes. GitHub Actions checkout v4.2.2 и setup-python v5.6.0 закреплены на проверенные SHA в CI. Docker adapter использует только заранее одобренный локальный image digest; синтетический digest в примере не относится к реальному image. Не использовать floating latest images в будущей лаборатории.
 
 ## Альтернативы
 

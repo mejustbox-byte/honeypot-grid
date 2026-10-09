@@ -2,7 +2,9 @@
 
 import hashlib
 import json
+import os
 import re
+import stat
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -60,7 +62,12 @@ def load_json(path: Path) -> dict:
     def invalid_constant(_):
         raise Rejected("non-finite JSON constant")
 
-    with path.open("rb") as stream:
+    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    info = os.fstat(fd)
+    if not stat.S_ISREG(info.st_mode) or info.st_size > MAX_INPUT:
+        os.close(fd)
+        raise Rejected("bounded regular JSON file required")
+    with os.fdopen(fd, "rb") as stream:
         data = stream.read(MAX_INPUT + 1)
     if len(data) > MAX_INPUT:
         raise Rejected("input size limit exceeded")
@@ -70,6 +77,12 @@ def load_json(path: Path) -> dict:
         raise Rejected("invalid JSON") from exc
     if type(value) is not dict:
         raise Rejected("JSON object required")
+    return value
+
+
+def digest_identifier(value: object) -> str:
+    if type(value) is not str or not re.fullmatch(r"[0-9a-f]{64}", value):
+        raise Rejected("invalid object hash")
     return value
 
 
@@ -130,10 +143,10 @@ class Config:
         return cls(**{k: raw[k] for k in cls.__dataclass_fields__})
 
 
-def plan(config: Config, now: int) -> dict:
+def plan(config: Config, now: int, adapter="mock") -> dict:
     return {
         "version": 1,
-        "adapter": "mock",
+        "adapter": adapter,
         "config": asdict(config),
         "isolation": dict(ISOLATION),
         "created_at": now,

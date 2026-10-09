@@ -2,7 +2,7 @@
 
 ## Статус и принципы
 
-Архитектура ниже описывает целевую систему. Первый offline mock MVP реализован в honeypot_grid: policy, manager, privacy и CLI. Он проверяет декларации, хранит mock state и аудит одной SQLite-транзакцией; VM/сетевой enforcement не реализованы. Доверительные границы важнее выбора облака или runtime. Control plane отделён от недоверенных приманок и файлов; при отказе политика запрещает новые действия. Dry-run является режимом по умолчанию.
+Архитектура ниже описывает целевую систему. Первый offline mock MVP реализован в honeypot_grid: policy, manager, privacy и CLI. Он проверяет декларации, хранит mock state и аудит одной SQLite-транзакцией; Есть отдельный Docker network-none адаптер; VM enforcement не реализован и containment не проверен. Доверительные границы важнее выбора облака или runtime. Control plane отделён от недоверенных приманок и файлов; при отказе политика запрещает новые действия. Dry-run является режимом по умолчанию.
 
 ## Менеджер
 
@@ -67,6 +67,6 @@ Default deny применяется к новым исходящим соеди�
 
 ## Ограничения текущего MVP
 
-Полный план хеширует конфигурацию, обязательные декларации изоляции, adapter=mock и время жизни. SQLite хранит план, approval и состояния awaiting-approval → observing → destroyed. Draft/validation представлены проверкой до записи. TTL проверяется перед apply, а перевод состояния в destroyed запускается командой expire. Отдельных provisioned/quarantined и сетевого stop пока нет.
+Полный план хеширует конфигурацию, обязательные декларации изоляции, выбранный adapter и время жизни. SQLite хранит план, approval и состояния awaiting-approval → observing → destroyed. Draft/validation представлены проверкой до записи. TTL проверяется перед apply, а перевод состояния в destroyed запускается командой expire. Docker adapter добавляет durable provisioning/quarantined и проверяемый stop; детали в [RUNBOOK.md](RUNBOOK.md).
 
 Approval проверяет заявленного owner и срок, потребляется атомарно. Идентичность доверена локальной ОС, --operator не доказывает личность. Изменение доверенного scope проверяется непосредственно перед mock apply. Реальный adapter не может использовать эту схему без отдельного enforcement и authentication review. Аудит не включает входные payload, но локальная база изменяема её владельцем.
