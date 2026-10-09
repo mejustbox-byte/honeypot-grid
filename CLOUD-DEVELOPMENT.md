@@ -4,7 +4,7 @@
 
 Окружение связано только с mejustbox-byte/honeypot-grid, приватный доступ «Только я», без project secrets и пользовательских переменных. Выбранный стек: Python 3.14.7, uv 0.12.19, pytest 9.1.1, Ruff 0.16.10, setuptools 80.9.0. Сохранённые credentials платформы не следует читать или выводить; отсутствие project secrets не означает отсутствие платформенной аутентификации.
 
-Используется код ветки feat/offline-manager-mvp, draft PR #2. Начальный снимок должен соответствовать проверенному commit, а не документационному 4220023. Не объединять PR при подготовке окружения. Новые задачи могут получить обновлённый checkout: сообщать фактический HEAD, выполнять offline uv sync --locked и повторять проверки при изменении lockfile. Изменения зависимостей требуют отдельного проверенного обновления снимка.
+Рабочая ветка — main; продуктовые PR #2–#4 уже объединены. Первый alpha опубликован с неизменяемой привязкой к a59f6af82a471dde95ce1fcf058273b45c5f489b. Начальный снимок должен соответствовать проверенному commit, а не документационному 4220023. Подготовка окружения сама по себе не является разрешением на слияние. Новые задачи могут получить обновлённый checkout: сообщать фактический HEAD, выполнять offline uv sync --locked и повторять проверки при изменении lockfile. Изменения зависимостей требуют отдельного проверенного обновления снимка.
 
 Первичная установка использует uv 0.12.19 из официального PyPI с hash verification (bootstrap мастера). В установочной фазе выполнить:
 
@@ -58,3 +58,9 @@ Settings → Codex Cloud → Environments → honeypot-grid → Edit. Прове
 ## Новая реализация после опубликованного снимка
 
 VM/delivery изменения проверяются отдельно; опубликованная среда остаётся на 71de654. В текущем local workspace проходят 129 тестов, включая localhost integration и parent-death. Это не повторная проверка в Cloud task и не обновление его filesystem snapshot. Изолированная задача ранее запрещала создание localhost-сокетов; новые socket integration tests также требуют loopback-capable среды. Local lab preflight завершился с exit 2: нет QEMU, Docker/socket, KVM и boot artifacts; аккаунт root. Для реального VM/Docker acceptance нужен отдельный non-root lab host с утверждёнными images/scope.
+
+## Повторная проверка текущего main, 2026-10-09
+
+Проверен checkout a175a559f4e625f3dd5351b602e559582478a701 в текущем рабочем контейнере: locked sync, Python 3.14.7, uv 0.12.19, 129 pytest tests, Ruff lint/format, 16 документов/60 локальных ссылок, CLI smoke, wheel/sdist, установка wheel и CLI вне checkout — PASS. Проверка ключа при umask 0077 и bash syntax checks также прошли. Для CLI smoke PATH должен включать .venv/bin, как в приведённой выше инструкции.
+
+Это не проверка нового восстановления сохранённой Cloud-среды: её опубликованный снимок и прежние socket failures не считаются исправленными этим результатом. Presence-only preflight exit 2: Docker/QEMU/socket/KVM отсутствуют, аккаунт root, утверждённые boot artifacts отсутствуют. Реальные VM/Docker acceptance и stable gates остаются открытыми. Существующий alpha v0.1.0-alpha.1 опубликован; CI и release workflow для a175a55 завершились успешно.
