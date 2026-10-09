@@ -45,8 +45,12 @@ Settings → Codex Cloud → Environments → honeypot-grid → Edit. Прове
 
 Официальный процесс: [OpenAI Cloud environments](https://learn.chatgpt.com/docs/environments/cloud-environments).
 
-## Последняя попытка обновления, 2026-10-09
+## Проверенный снимок, 2026-10-09
 
-В setup VM получение product commit по GitHub HTTPS вернуло proxy 403. Подготовлен проверенный git bundle и передан штатным вложением для импорта в существующий checkout; это не изменение сетевой политики. Выполнение product install, сохранение нового filesystem и Republish ещё должны быть подтверждены. Docker executable/socket и cgroup обнаружены, KVM отсутствует; daemon и lab services не запускались. Bundle импортирован; первый product pytest run выявил зависимость теста ключа от umask. Fixture исправлена и локально проходят 84 теста при umask 0077. Для Cloud build отсутствует setuptools 80.9.0; официальный wheel передаётся отдельно с SHA256, сохраняется в .cloud-env/wheels и используется через UV_FIND_LINKS без включения сети. Повторный полный Cloud check и Republish пока ожидаются.
+Снимок продукта 71de6547c12feebfa7213afa423bac1ca6472fe1 установлен и полностью проверен в Cloud setup VM. Сохранены install/start инструкции, выполнены Save и Republish; UI подтвердил «Среда опубликована». Доступ «Только я», интернет выключен, project secrets и пользовательские переменные отсутствуют.
+
+Проверки установки и offline startup завершились с exit 0: Python 3.14.7, uv 0.12.19, pytest 9.1.1, Ruff 0.16.10; 84 теста, lint/format, 13 документов и 42 локальные ссылки, установленный CLI и wheel/sdist. Новая задача восстановила тот же HEAD и версии; tracked/staged diff exit 0, offline sync exit 0. Полный cloud_check.sh завершился с exit 1: 81 тест прошёл, 3 tests/test_sensor.py упали с OSError при создании localhost-сокета 127.0.0.1. Полный PASS из setup VM не воспроизводится в изолированной задаче. Не пропускать эти тесты и не ослаблять сеть для получения зелёного статуса. Для socket integration требуется среда, где разрешён loopback. Оставшиеся проверки выполнены отдельно в новой задаче: документы 13/42, CLI вне checkout, offline wheel/sdist и presence-only report завершились с exit 0. Последующие изменения статуса в документации не изменяют опубликованный снимок 71de654.
+
+После proxy 403 для GitHub HTTPS публичный код импортирован проверенным git bundle через штатное вложение. Официальный setuptools 80.9.0 wheel проверен по SHA256 и сохранён в .cloud-env/wheels для offline build. Сетевая политика не менялась. Тест прав ключа исправлен для umask 0077 без ослабления production проверки. Docker executable/socket и cgroup обнаружены, KVM отсутствует; daemon и lab services не запускались.
 
 Новые данные о проверках записываются по результату, а не по намерению. Релизная готовность: [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md).

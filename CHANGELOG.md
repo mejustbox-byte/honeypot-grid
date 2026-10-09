@@ -27,7 +27,8 @@ No product release/tag has been issued.
 ### Validation and limits
 
 - Local: 84 tests, Ruff lint/format, CLI smoke, docs/link checks, source/wheel build and fresh wheel installation passed.
-- Documentation-era Cloud restore at commit 4220023 passed; product snapshot update is in progress and is not yet accepted.
+- Product Cloud snapshot 71de654 passed full setup checks and was published with private access and internet disabled.
+- Fresh task restored the same HEAD/versions and synced offline (exit 0), but full check exited 1: 81 tests passed, 3 localhost socket tests failed. Full isolated-task acceptance remains open.
 - Hosted CI, real Docker/VM containment, VM sample execution, independent TTL teardown and automatic sensor transport are not established by these local results.
 
 ## Initial scaffold

@@ -4,7 +4,7 @@ Status: not ready. The owner authorized merge/release once ready; no merge, tag 
 
 | Gate | Required evidence | Current status |
 | --- | --- | --- |
-| Reproducible development | Current Cloud snapshot, pinned versions, new-task restore and recorded check exits | Local checks pass; Cloud update pending |
+| Reproducible development | Current Cloud snapshot, pinned versions, new-task restore and recorded check exits | Snapshot 71de654 published; restore/versions/sync pass; full task check exit 1 (81 pass, 3 socket failures) |
 | Code validation | Unit/integration, lint/format, CLI smoke, wheel/sdist and clean diff | 84 tests and local checks pass |
 | Runtime containment | Actual dedicated VM Docker lifecycle, IPv4/IPv6 synthetic sentinels and host boundary review | Not run |
 | TTL and recovery | Independent supervisor, Docker/manager failure, bounded cleanup and no orphan resources | Fake adapter tests pass; real acceptance pending |

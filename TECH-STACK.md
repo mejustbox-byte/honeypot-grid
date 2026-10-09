@@ -29,7 +29,9 @@ CI runs lint/format, pytest, documentation and installed CLI smoke, packaging an
 
 Only mejustbox-byte/honeypot-grid belongs to this environment. Keep access private, project secrets absent and agent internet disabled. Do not read or print platform authentication. Use [CLOUD-DEVELOPMENT.md](CLOUD-DEVELOPMENT.md) for installation/startup and [RUNBOOK.md](RUNBOOK.md) for lab limits.
 
-On 2026-10-09, the older documentation snapshot at 4220023 restored successfully. New product install/offline-check scripts pass locally. Updating the actual Cloud snapshot and verifying a fresh task is tracked independently in [ROADMAP.md](ROADMAP.md). A GitHub proxy 403 was observed during the update attempt; this is evidence for that request, not proof of all network containment. Docker presence and absent KVM in the setup VM do not qualify it as a sample laboratory.
+On 2026-10-09, product snapshot 71de654 passed full setup VM checks (84 tests, lint/format, documentation, CLI, wheel/sdist; exit 0) and was saved/published. A fresh task restored the same HEAD and pinned versions with clean tracked state and offline sync exit 0. Full cloud_check exited 1: 81 passed, 3 localhost socket failures in tests/test_sensor.py. Setup success therefore does not establish full verification in an isolated task. Keep those integration tests mandatory in a loopback-capable environment; do not weaken network isolation or report excluded tests as passed. See [ROADMAP.md](ROADMAP.md).
+
+A GitHub proxy 403 was observed during setup; verified code bundles and the official hash-checked setuptools wheel were imported using standard attachments, with internet disabled/private access retained. This single network result is not proof of all containment. Docker presence and absent KVM do not qualify Cloud as a sample laboratory.
 
 ## Primary references
 

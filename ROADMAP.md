@@ -19,11 +19,12 @@ The project remains unreleased. Completed implementation and infrastructure acce
 
 - [x] Documentation-era Cloud snapshot restored at 4220023 with Python 3.14.7 and smoke exit 0.
 - [x] New product bootstrap and offline checks pass locally (84 tests).
-- [ ] Product snapshot installed and fully checked in Cloud setup VM.
-- [ ] Updated install/start instructions saved and Republish completed.
-- [ ] New task restored from the updated snapshot with actual HEAD/versions/check exits verified.
+- [x] Product snapshot 71de654 installed and fully checked in Cloud setup VM (84 tests; checks exit 0).
+- [x] Updated install/start instructions saved and Republish completed; private access and internet disabled retained.
+- [x] New task restored at 71de654; actual HEAD/versions and clean tracked state verified.
+- [ ] Full new-task checks: offline sync exit 0, cloud_check exit 1 (81 passed, 3 localhost socket failures). Resolve the execution-environment compatibility without weakening isolation.
 
-The previous documentation snapshot is insufficient for product development. Follow [CLOUD-DEVELOPMENT.md](CLOUD-DEVELOPMENT.md) for the current setup and any publication blockers.
+The published product snapshot supersedes the previous documentation snapshot. Follow [CLOUD-DEVELOPMENT.md](CLOUD-DEVELOPMENT.md) for the current setup and any publication blockers.
 
 ## Laboratory and product work remaining
 
