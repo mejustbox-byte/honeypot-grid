@@ -11,15 +11,15 @@ from pathlib import Path
 def main():
     version = tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"]
     commit = os.environ["GITHUB_SHA"]
-    if version != "0.1.0a1" or not re.fullmatch(r"[0-9a-f]{40}", commit):
+    if version != "0.1.0a2" or not re.fullmatch(r"[0-9a-f]{40}", commit):
         raise ValueError("Unexpected release version or commit")
     paths = [
-        Path("dist/honeypot_grid-0.1.0a1-py3-none-any.whl"),
-        Path("dist/honeypot_grid-0.1.0a1.tar.gz"),
+        Path("dist/honeypot_grid-0.1.0a2-py3-none-any.whl"),
+        Path("dist/honeypot_grid-0.1.0a2.tar.gz"),
     ]
     hashes = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     manifest = {
-        "tag": "v0.1.0-alpha.1",
+        "tag": "v0.1.0-alpha.2",
         "version": version,
         "commit": commit,
         "runtime_dependencies": [],

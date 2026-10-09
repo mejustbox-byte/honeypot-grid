@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.0-alpha.2 — 2026-10-09
+
+Documentation update: user-provided Linux laboratory, acceptance responsibilities and neutral infrastructure wording. Package 0.1.0a2 includes the current documentation; real Docker/QEMU containment and cleanup acceptance remain pending. Release automation publishes only the tested workflow commit and preserves existing published assets.
+
 ## v0.1.0-alpha.1 — 2026-10-09
 
 First preliminary laboratory release, package 0.1.0a1. The owner authorized merge/release with actual local-infrastructure acceptance assigned to the user in LOCAL-PC.md. Stable/production readiness is not claimed.
