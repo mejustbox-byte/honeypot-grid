@@ -19,3 +19,9 @@ The first alpha is already published at tag v0.1.0-alpha.1 on a59f6af82a471dde95
 Latest local acceptance (2026-10-09): cloud_check.sh exit 0 under umask 0077 on Python 3.14.7; 129 tests, lint/format, docs 14/46, CLI and packaging pass. Fresh wheel installation and CLI outside checkout passed. lab_preflight.py exit 2: QEMU/Docker/socket/KVM absent, account root, approved boot artifacts absent. No VM boot or Docker lab probe ran. This evidence does not update the published Cloud snapshot 71de654 or close its isolated-task socket failures.
 
 Repeat verification (2026-10-09, main a175a55): 129 tests, Ruff lint/format, 16 documents/60 links, installed CLI smoke, wheel/sdist, fresh wheel installation and CLI outside checkout, private-umask key regression and shell syntax checks passed. Lab preflight exit 2: no Docker/QEMU/socket/KVM, root account and no approved boot artifacts. This is current-container evidence, not a saved Cloud snapshot restore or real lab acceptance. No stable release is justified by these checks.
+
+Budget decision (2026-10-09): no budget is available for paid cloud resources.
+Do not provision paid VMs/subscriptions. The owner will supply an existing or
+local dedicated Linux lab and perform the real acceptance steps in
+[LOCAL-PC.md](LOCAL-PC.md). Deferred checks remain not-run; this decision does
+not waive stable gates or promote v0.1.0-alpha.1 to stable.
