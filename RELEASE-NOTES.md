@@ -1,7 +1,7 @@
-# Honeypot Grid v0.1.0-alpha.1
+# Honeypot Grid v0.1.0-alpha.2
 
-Первый предварительный выпуск для синтетической локальной Linux-лаборатории.
-Python package version: 0.1.0a1; Git tag: v0.1.0-alpha.1. Это alpha, не заявление
+Второй предварительный выпуск для синтетической локальной Linux-лаборатории.
+Python package version: 0.1.0a2; Git tag: v0.1.0-alpha.2. Это alpha, не заявление
 о готовности к production или допуске недоверенных образцов.
 
 Поставляются private policy/lifecycle CLI, mock и opt-in Docker network-none,
@@ -14,6 +14,7 @@ smoke, wheel/sdist и fresh wheel install вне checkout. Реальные loca
 sensor-to-report и subprocess deadline/output/parent-death tests прошли.
 VM/Docker adapter tests используют fake runners; реальный guest boot,
 Docker delivery/containment и независимый TTL/inventory acceptance не выполнены.
+Обновлены инструкции подготовки лаборатории пользователем и публичная документация.
 GitHub Actions перед публикацией повторяет code checks и сборку на merge commit.
 
 Пользователь выполняет локальные шаги из [LOCAL-PC.md](LOCAL-PC.md): подготовка

@@ -1,6 +1,6 @@
 # Что пользователю выполнить на локальном ПК
 
-Первый выпуск v0.1.0-alpha.1 (Python package 0.1.0a1) предназначен для
+Текущий выпуск v0.1.0-alpha.2 (Python package 0.1.0a2) предназначен для
 синтетических лабораторных проверок. Он не подтверждает production containment.
 Слияние и alpha-релиз разрешены владельцем с переносом проверок локальной
 инфраструктуры в этот документ. Для стабильного релиза эти проверки обязательны.
@@ -56,7 +56,7 @@ AppArmor/SELinux; QEMU должен быть root-owned, non-writable, non-setui
 ```sh
 git clone https://github.com/mejustbox-byte/honeypot-grid.git
 cd honeypot-grid
-git checkout --detach v0.1.0-alpha.1
+git checkout --detach v0.1.0-alpha.2
 git status --short --branch
 git rev-parse HEAD
 python3 --version

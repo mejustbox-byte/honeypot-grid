@@ -1,4 +1,4 @@
-name: First alpha release
+name: Verified alpha release
 on:
   push:
     branches: [main]
@@ -7,7 +7,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: first-alpha-release
+  group: verified-alpha-release
   cancel-in-progress: false
 jobs:
   release:

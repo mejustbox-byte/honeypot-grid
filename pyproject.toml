@@ -1,7 +1,7 @@
-# First alpha artifacts are frozen at the checked a59f6af merge commit.
+# Alpha artifacts are built from the tested release commit.
 [project]
 name = "honeypot-grid"
-version = "0.1.0a1"
+version = "0.1.0a2"
 description = "Offline policy and mock lifecycle manager for isolated honeypot labs"
 requires-python = ">=3.14,<3.15"
 license = "MIT"
