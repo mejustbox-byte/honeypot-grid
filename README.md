@@ -56,7 +56,6 @@ uv run --locked pytest -q
 - [ROADMAP.md](ROADMAP.md) — этапы и условия готовности.
 - [CHANGELOG.md](CHANGELOG.md) — история изменений.
 - [SECURITY.md](SECURITY.md) — приватное сообщение об уязвимостях.
-- [TECH-STACK.md](TECH-STACK.md) — выбор стека и критерии готовности Codex Cloud.
 - [LICENSE](LICENSE) — существующая MIT-лицензия.
 
 Проект не выполняет ответные атаки, pivoting или автоматическую загрузку наблюдаемых файлов на внешние сервисы.

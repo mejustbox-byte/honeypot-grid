@@ -27,7 +27,7 @@ Policy enforcement отделён от LLM и недоверенных данн�
 
 Поддерживать README.md, ROADMAP.md, INSTALL.md, CHANGELOG.md, LICENSE и SECURITY.md. При изменении архитектуры синхронизировать ARCHITECTURE.md и THREAT-MODEL.md. README и INSTALL содержат только существующие команды; планы явно обозначены.
 
-Для кода: unit-тесты политики и парсеров, интеграционные тесты отказов, containment и privacy tests по [INSTALL.md](INSTALL.md). Реализованы локальные pipeline, delivery collector, QEMU VM adapter и opt-in Docker adapter; fake runner tests не заменяют лабораторные проверки. Выполняйте uv sync --locked, Ruff check/format, pytest, scripts/smoke.py, scripts/cli_smoke.py и uv build. Cloud setup проверяется через scripts/cloud_setup.sh и scripts/cloud_check.sh. Прохождение unit-тестов не является прохождением network containment.
+Для кода: unit-тесты политики и парсеров, интеграционные тесты отказов, containment и privacy tests по [INSTALL.md](INSTALL.md). Реализованы локальные pipeline, delivery collector, QEMU VM adapter и opt-in Docker adapter; fake runner tests не заменяют лабораторные проверки. Выполняйте uv sync --locked, Ruff check/format, pytest, scripts/smoke.py, scripts/cli_smoke.py и uv build. Среда разработки проверяется скриптами scripts/cloud_setup.sh и scripts/cloud_check.sh. Прохождение unit-тестов не является прохождением network containment.
 
 Для документации: проверить локальные ссылки, отсутствие секретов и реальных инфраструктурных адресов, согласованность статуса, терминов и roadmap. Проверки ссылок не требуют сети. Не добавлять скачивание/исполнение образцов для тестирования.
 
@@ -42,4 +42,4 @@ Policy enforcement отделён от LLM и недоверенных данн�
 
 ## Слияние и выпуск
 
-Владелец явно разрешил первый alpha-релиз с локальными инфраструктурными проверками, зафиксированными как пользовательская работа в [LOCAL-PC.md](LOCAL-PC.md). Alpha допускает непроверенные лабораторные gates при честном описании ограничений; они остаются обязательными до stable/production выпуска. PR #2 основан на документационном PR #1: сначала объединить базу, retarget в main и проверить финальный кандидат. Выпуск публикуется GitHub Actions только после code/package checks и из точного merge commit. Cloud snapshot обновляется отдельно по [CLOUD-DEVELOPMENT.md](CLOUD-DEVELOPMENT.md).
+Для alpha-релиза CI должен подтверждать код, документацию и пакет. Непроверенные лабораторные gates необходимо явно перечислить; они остаются обязательными до stable/production выпуска. Публикация выполняется workflow только из проверенного merge commit.
