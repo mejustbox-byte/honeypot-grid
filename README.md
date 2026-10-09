@@ -42,6 +42,7 @@ uv run --locked pytest -q
 
 `plan` создаёт только локальную запись dry-run. Digest из примера синтетический: образ не скачивается. Полный workflow подтверждения и остановки приведён в [INSTALL.md](INSTALL.md).
 
+- [CLOUD-DEVELOPMENT.md](CLOUD-DEVELOPMENT.md) — установка и проверка облачной среды разработки.
 - [RUNBOOK.md](RUNBOOK.md) — реализованные компоненты, ограничения и лабораторный запуск.
 - [INSTALL.md](INSTALL.md) — подготовка лаборатории и проверка установки.
 - [ARCHITECTURE.md](ARCHITECTURE.md) — компоненты, доверительные границы и потоки данных.

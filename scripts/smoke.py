@@ -16,6 +16,8 @@ REQUIRED = (
     "THREAT-MODEL.md",
     "CONTRIBUTING.md",
     "TECH-STACK.md",
+    "RUNBOOK.md",
+    "CLOUD-DEVELOPMENT.md",
 )
 
 
