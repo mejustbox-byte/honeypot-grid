@@ -51,7 +51,7 @@ Runtime effect нельзя откатить SQLite-транзакцией: dura
 
 ## Разработка и выпуск
 
-Облачная установка и восстановление: [CLOUD-DEVELOPMENT.md](CLOUD-DEVELOPMENT.md). Разрешение владельца на merge/release действует после проверки готовности по [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md); сейчас продукт остаётся unreleased.
+Облачная установка и восстановление: [CLOUD-DEVELOPMENT.md](CLOUD-DEVELOPMENT.md). Первый alpha-релиз разрешён с фиксацией непроведённых инфраструктурных проверок в [LOCAL-PC.md](LOCAL-PC.md). Stable/production выпуск требует всех gates из [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md).
 
 ## Доставка событий
 

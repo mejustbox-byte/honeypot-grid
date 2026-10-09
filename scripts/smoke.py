@@ -20,6 +20,8 @@ REQUIRED = (
     "CLOUD-DEVELOPMENT.md",
     "RELEASE-CHECKLIST.md",
     "lab/README.md",
+    "LOCAL-PC.md",
+    "RELEASE-NOTES.md",
 )
 
 

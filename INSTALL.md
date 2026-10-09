@@ -105,3 +105,7 @@ uv run --locked python scripts/lab_preflight.py
 ```
 
 Exit 2 означает отсутствие базовых предпосылок; даже exit 0 не подтверждает boot artifacts, permissions/provenance и containment. Не генерировать положительную attestation для исправления статуса. Guest build требует только утверждённые локальные vendor files; установка QEMU, выбор версии kernel и отдельный lab host выполняются администратором в разрешённой инфраструктуре. Development Cloud не становится лабораторией после установки пакетов.
+
+## Первый alpha на локальном ПК
+
+Пошаговая установка точного tag, platform requirements, lab acceptance и rollback: [LOCAL-PC.md](LOCAL-PC.md). Состав первого предварительного выпуска: [RELEASE-NOTES.md](RELEASE-NOTES.md).

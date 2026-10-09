@@ -1,6 +1,6 @@
 # Product release readiness
 
-Status: not ready. The owner authorized merge/release once ready; no merge, tag or GitHub release is issued by this checklist. Version 0.1.0 in pyproject.toml is package metadata.
+Scope: first alpha v0.1.0-alpha.1 (package 0.1.0a1), explicitly authorized by the owner with local-infrastructure work documented in [LOCAL-PC.md](LOCAL-PC.md). Alpha requires code/docs/package checks and truthful limits; it does not assert production readiness. Stable release remains blocked by the lab gates below.
 
 | Gate | Required evidence | Current status |
 | --- | --- | --- |
@@ -14,6 +14,6 @@ Status: not ready. The owner authorized merge/release once ready; no merge, tag 
 | Supply chain | Approved image provenance, dependency/license inventory, SBOM, artifact hashes | Container images/release inventory not approved |
 | Operations | Closed scope, budget, ownership, incident contacts, teardown and independent security review | Infrastructure not selected |
 
-Once gates pass: review draft documentation PR #1 and product PR #2; merge the documentation base first, retarget the product PR to main and rerun required checks on the final merge candidate. Publish only from the reviewed commit with version/tag alignment, artifact hashes, test evidence, known limits and rollback/teardown instructions. Do not label mock-only or partial lab functionality as a complete production release.
+For the authorized first alpha: merge documentation PR #1, retarget product PR #2 to main and verify the final candidate; the publication workflow reruns checks on the merged commit. For stable release, all gates above must pass. Publish only from the reviewed commit with version/tag alignment, artifact hashes, test evidence, known limits and rollback/teardown instructions. Do not label mock-only or partial lab functionality as a complete production release.
 
 Latest local acceptance (2026-10-09): cloud_check.sh exit 0 under umask 0077 on Python 3.14.7; 129 tests, lint/format, docs 14/46, CLI and packaging pass. Fresh wheel installation and CLI outside checkout passed. lab_preflight.py exit 2: QEMU/Docker/socket/KVM absent, account root, approved boot artifacts absent. No VM boot or Docker lab probe ran. This evidence does not update the published Cloud snapshot 71de654 or close its isolated-task socket failures.

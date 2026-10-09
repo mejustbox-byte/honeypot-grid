@@ -4,7 +4,7 @@
 
 ## Статус
 
-Проект не выпущен; версия пакета 0.1.0 не означает готовый релиз. Условия выпуска: [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md).
+Первый предварительный выпуск: v0.1.0-alpha.1 (Python package 0.1.0a1). Только синтетическая Linux-лаборатория; production containment не подтверждён. Локальные шаги пользователя: [LOCAL-PC.md](LOCAL-PC.md), состав и ограничения: [RELEASE-NOTES.md](RELEASE-NOTES.md). Условия стабильного выпуска: [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md).
 
 Реализованы менеджер lifecycle, приватное SQLite-хранение, HMAC telemetry/retention, HTTP/SSH synthetic sensors, Docker network-none адаптер, карантин, static metadata worker, offline анализ и подтверждаемый синтетический IoC export. По умолчанию используется mock. Контейнеры доступны только в отдельно подготовленной VM; их containment здесь не проверен.
 

@@ -1,6 +1,6 @@
 # Roadmap
 
-The project remains unreleased. Completed implementation and infrastructure acceptance are tracked separately; passing mocked tests does not complete a laboratory milestone.
+The first alpha release is v0.1.0-alpha.1 (package 0.1.0a1); stable/production readiness remains open. Completed implementation and infrastructure acceptance are tracked separately; passing mocked tests does not complete a laboratory milestone.
 
 ## Implemented and locally verified
 
@@ -44,4 +44,4 @@ The published product snapshot supersedes the previous documentation snapshot. F
 
 ## Release gate
 
-The owner's permission to merge and release applies when readiness is established. Current package version 0.1.0 is not an issued release. Draft PRs stay unmerged until the relevant acceptance gates and [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md) are complete. STIX interoperability, multi-tenancy and scale-out orchestration remain future scope.
+The owner explicitly authorized the first release with local-infrastructure acceptance documented as user work. Alpha may be merged/released after code/package/docs checks with unverified lab gates clearly recorded in [LOCAL-PC.md](LOCAL-PC.md). These gates still block a stable production release. See [RELEASE-NOTES.md](RELEASE-NOTES.md) and [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md). STIX interoperability, multi-tenancy and scale-out remain future scope.

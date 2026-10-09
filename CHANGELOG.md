@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased — 2026-10-09
+## v0.1.0-alpha.1 — 2026-10-09
 
-No product release/tag has been issued.
+First preliminary laboratory release, package 0.1.0a1. The owner authorized merge/release with actual local-infrastructure acceptance assigned to the user in LOCAL-PC.md. Stable/production readiness is not claimed.
 
 ### Added
 

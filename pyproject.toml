@@ -1,6 +1,6 @@
 [project]
 name = "honeypot-grid"
-version = "0.1.0"
+version = "0.1.0a1"
 description = "Offline policy and mock lifecycle manager for isolated honeypot labs"
 requires-python = ">=3.14,<3.15"
 license = "MIT"
