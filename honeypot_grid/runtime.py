@@ -4,7 +4,6 @@ import json
 import os
 import re
 import stat
-import subprocess
 
 from .policy import Config, Rejected, fields, identifier
 
@@ -12,21 +11,14 @@ RUN_HASH = re.compile(r"[a-f0-9]{64}\Z")
 
 
 def run_command(argv):
+    from .process import bounded_run
+
+    # Logs are bounded by both sensor budget and Docker's local log rotation.
+    limit = 1_024_000 if "logs" in argv else 65536
     try:
-        result = subprocess.run(
-            argv,
-            stdin=subprocess.DEVNULL,
-            capture_output=True,
-            text=True,
-            timeout=10,
-            check=False,
-            env={"PATH": "/usr/bin:/bin", "HOME": "/nonexistent"},
-        )
-    except (OSError, subprocess.TimeoutExpired) as exc:
-        raise Rejected("runtime unavailable") from exc
-    if result.returncode or len(result.stdout) > 65536:
-        raise Rejected("runtime command rejected")
-    return result.stdout
+        return bounded_run(argv, output_limit=limit).decode("utf-8")
+    except UnicodeError as exc:
+        raise Rejected("invalid runtime text") from exc
 
 
 class DockerRuntime:
@@ -223,6 +215,35 @@ class DockerRuntime:
             self._run("container", "rm", "--force", "--volumes", self._name(digest))
         if self.exists(digest):
             raise Rejected("runtime cleanup unconfirmed")
+
+    def delivery_snapshot(self, digest, config):
+        self.preflight(config)
+        self.verify(digest, config)
+        output = self._run("container", "logs", "--tail", "1000", self._name(digest))
+        self.verify(digest, config)
+        if type(output) is not str or len(output.encode()) > 1_024_000:
+            raise Rejected("delivery snapshot limit exceeded")
+        return output.encode()
+
+    def lab_probe(self, digest, config):
+        from .lab_probe import PROBE, validate_probe
+
+        self.preflight(config)
+        if not self.verify(digest, config):
+            raise Rejected("running lab sensor required")
+        result = self._json(
+            "container",
+            "exec",
+            "--user",
+            "65532:65532",
+            self._name(digest),
+            "python",
+            "-I",
+            "-c",
+            PROBE,
+        )
+        self.verify(digest, config)
+        return validate_probe(result)
 
     def inventory(self):
         names = self._run(

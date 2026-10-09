@@ -143,6 +143,8 @@ class DockerRunner:
         self.mutation = mutation
         self.value = None
         self.calls = []
+        self.logs = ""
+        self.after_logs = None
 
     def __call__(self, argv):
         self.calls.append(argv)
@@ -207,6 +209,18 @@ class DockerRunner:
         if args[:2] == ["container", "start"]:
             self.value["State"]["Running"] = True
             return ""
+        if args[:2] == ["container", "logs"]:
+            if self.after_logs:
+                self.after_logs(self.value)
+            return self.logs
+        if args[:2] == ["container", "exec"]:
+            from honeypot_grid.lab_probe import PROBE
+
+            assert args[-1] == PROBE
+            assert args[2:4] == ["--user", "65532:65532"]
+            return json.dumps(
+                {"version": 1, "only_loopback": True, "blocked_attempts": 30, "unprivileged": True}
+            )
         if args[:2] == ["container", "rm"]:
             self.value = None
             return ""
@@ -276,3 +290,58 @@ def test_docker_does_not_remove_foreign_label(settings):
     with pytest.raises(Rejected):
         runtime.stop("a" * 64)
     assert runner.value is not None
+
+
+def test_docker_delivery_scope_retry_and_security_drift(tmp_path, settings):
+    from honeypot_grid.policy import canonical
+    from honeypot_grid.telemetry import Telemetry
+    from honeypot_grid.transport import envelope
+
+    raw, scope = settings
+    config = Config.parse(raw, scope)
+    runner = DockerRunner(config)
+    runtime = DockerRuntime(attestation(), runner)
+    manager = Manager(tmp_path / "manager.sqlite3", lambda: 1000, runtime)
+    store = Telemetry(tmp_path / "events.sqlite3", lambda: 1000)
+    try:
+        plan = manager.prepare(raw, scope)
+        manager.approve(plan["plan_hash"], "lab-operator")
+        manager.apply(plan["plan"], scope, "lab-operator")
+        runner.logs = (
+            canonical(
+                envelope(
+                    {
+                        "schema_version": 1,
+                        "sensor_id": config.lab_id,
+                        "timestamp": 1000,
+                        "service": config.service,
+                        "category": "connection",
+                    }
+                )
+            )
+            + "\n"
+        )
+        with pytest.raises(Rejected):
+            manager.collect(plan["plan_hash"], scope, "wrong-owner", store, b"k" * 32, "epoch-test")
+        assert (
+            manager.collect(
+                plan["plan_hash"], scope, "lab-operator", store, b"k" * 32, "epoch-test"
+            )["ingested"]
+            == 1
+        )
+        assert (
+            manager.collect(plan["plan_hash"], scope, "lab-operator", store, b"r" * 32, "rotated")[
+                "duplicates"
+            ]
+            == 1
+        )
+        assert manager.lab_probe(plan["plan_hash"], scope, "lab-operator")["blocked_attempts"] == 30
+        runner.after_logs = lambda value: value["HostConfig"].update(NetworkMode="host")
+        with pytest.raises(Rejected):
+            manager.collect(
+                plan["plan_hash"], scope, "lab-operator", store, b"k" * 32, "epoch-test"
+            )
+        assert store.db.execute("SELECT count(*) FROM events").fetchone() == (1,)
+    finally:
+        manager.close()
+        store.close()

@@ -8,7 +8,7 @@
 
 Реализованы менеджер lifecycle, приватное SQLite-хранение, HMAC telemetry/retention, HTTP/SSH synthetic sensors, Docker network-none адаптер, карантин, static metadata worker, offline анализ и подтверждаемый синтетический IoC export. По умолчанию используется mock. Контейнеры доступны только в отдельно подготовленной VM; их containment здесь не проверен.
 
-Полной production-реализации ещё нет: disposable VM executor, доставка событий, облачное provisioning и реальные сетевые acceptance tests остаются открытыми. Точное состояние и команды: [RUNBOOK.md](RUNBOOK.md).
+Добавлены opt-in QEMU VM executor, сборка initramfs из проверенных локальных файлов, доставка sensor envelope через приватный collector и команда lab-probe. Их локальные проверки проходят; реальная загрузка VM и Docker containment ещё требуют отдельной лаборатории. Облачное provisioning, внешняя auth и реальные сетевые acceptance tests остаются открытыми. Точное состояние и команды: [RUNBOOK.md](RUNBOOK.md).
 
 ## Основные компоненты
 

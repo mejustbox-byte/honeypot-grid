@@ -2,7 +2,6 @@
 
 import argparse
 import asyncio
-import json
 import secrets
 import time
 
@@ -17,7 +16,11 @@ class Sensor:
         self.sensor_id = identifier(sensor_id)
         self.active = 0
         self.events = 0
-        self.emit = emit or (lambda event: print(json.dumps(event), flush=True))
+        if emit is None:
+            from .transport import emit as transport_emit
+
+            emit = transport_emit
+        self.emit = emit
 
     async def handle(self, reader, writer):
         if self.active >= 16 or self.events >= 1000:

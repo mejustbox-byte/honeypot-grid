@@ -6,6 +6,10 @@ No product release/tag has been issued.
 
 ### Added
 
+- Versioned minimal sensor envelopes, atomic delivery receipts, bounded snapshot/Docker collectors and restart/rotation replay protection.
+- Hash-bound one-use QEMU TCG jobs, sealed boot artifacts/input, fixed no-NIC configuration, bounded metadata results, deadline/process-group/parent-death cleanup.
+- Deterministic initramfs packer for reviewed local vendor files, guest init/worker and fixed harmless lab-probe/preflight commands.
+
 - Architecture, threat model, private vulnerability reporting and contribution/release workflow.
 - Strict bounded configuration/scope, dry-run, hash-bound approval and TTL lifecycle manager.
 - Private SQLite/key storage, quotas, clock rollback rejection and local metadata audit.
@@ -26,10 +30,11 @@ No product release/tag has been issued.
 
 ### Validation and limits
 
-- Local: 84 tests, Ruff lint/format, CLI smoke, docs/link checks, source/wheel build and fresh wheel installation passed.
+- Earlier snapshot local: 84 tests, Ruff lint/format, CLI smoke, docs/link checks, source/wheel build and fresh wheel installation passed.
 - Product Cloud snapshot 71de654 passed full setup checks and was published with private access and internet disabled.
 - Fresh task restored the same HEAD/versions and synced offline (exit 0), but full check exited 1: 81 tests passed, 3 localhost socket tests failed. Full isolated-task acceptance remains open.
-- Hosted CI, real Docker/VM containment, VM sample execution, independent TTL teardown and automatic sensor transport are not established by these local results.
+- Current implementation: full offline checks exit 0 under umask 0077: Ruff, 129 tests, docs 14/46, CLI, wheel/sdist and fresh wheel install pass. Tests cover real localhost sensor-to-report and subprocess deadline/output/parent-death enforcement; VM/Docker tests use fake runners.
+- Lab preflight exit 2: no QEMU, Docker/socket, KVM or approved boot artifacts in the local workspace; account is root. No actual VM or Docker lab probe ran. Hosted CI and independent infrastructure containment/TTL acceptance remain open.
 
 ## Initial scaffold
 

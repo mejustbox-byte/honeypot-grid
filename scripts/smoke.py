@@ -19,6 +19,7 @@ REQUIRED = (
     "RUNBOOK.md",
     "CLOUD-DEVELOPMENT.md",
     "RELEASE-CHECKLIST.md",
+    "lab/README.md",
 )
 
 
@@ -37,7 +38,7 @@ def main():
         for target in re.findall(r"\[[^\]]+\]\(([^)]+)\)", content):
             if target.startswith(("https://", "http://", "#")):
                 continue
-            local = (ROOT / target.split("#", 1)[0]).resolve()
+            local = (ROOT / name).parent.joinpath(target.split("#", 1)[0]).resolve()
             if not local.is_relative_to(ROOT) or not local.is_file():
                 raise ValueError(f"Invalid local link in {name}")
             checked_links += 1

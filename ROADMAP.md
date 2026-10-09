@@ -14,11 +14,14 @@ The project remains unreleased. Completed implementation and infrastructure acce
 - [x] Synthetic IoC profile with provenance/confidence/expiry and one-use reviewed export.
 - [x] Offline analysis and hash/schema/evidence-bound proposal validation without tools.
 - [x] Installed CLI, wheel/sdist, pinned CI and reproducible cloud install/check scripts.
+- [x] Versioned sensor delivery, atomic receipts, replay/rotation/retention and bounded local/Docker collectors.
+- [x] Hash-approved opt-in QEMU TCG executor, sealed artifacts/input, bounded results and process cleanup.
+- [x] Reviewed-file deterministic initramfs packer and fixed lab-probe command.
 
 ## Development environment acceptance
 
 - [x] Documentation-era Cloud snapshot restored at 4220023 with Python 3.14.7 and smoke exit 0.
-- [x] New product bootstrap and offline checks pass locally (84 tests).
+- [x] Published product bootstrap snapshot checks passed locally (84 tests); current VM/delivery implementation passes 129 local tests.
 - [x] Product snapshot 71de654 installed and fully checked in Cloud setup VM (84 tests; checks exit 0).
 - [x] Updated install/start instructions saved and Republish completed; private access and internet disabled retained.
 - [x] New task restored at 71de654; actual HEAD/versions and clean tracked state verified.
@@ -32,8 +35,10 @@ The published product snapshot supersedes the previous documentation snapshot. F
 - [ ] Actual Docker start/stop, crash recovery, independent TTL supervisor and orphan checks.
 - [ ] IPv4/IPv6 DNS/metadata/sibling/control-plane/production sentinel tests.
 - [ ] Approved ingress topology; current network-none profile has no external ingress.
-- [ ] Sensor-to-ingest transport with schema validation, bounded delivery and failure recovery.
-- [ ] Disposable file VM/microVM executor, bounded output and verified teardown.
+- [x] Local sensor-to-ingest transport, schema validation, bounded delivery and retry recovery.
+- [ ] Actual Docker-log delivery and outage recovery on an approved lab host.
+- [x] Disposable file VM executor adapter, bounded output and fail-closed approval.
+- [ ] Actual approved guest boot, hostile-output/deadline tests and verified VM teardown.
 - [ ] Optional selected LLM provider, secret handling and offline evaluation against false findings.
 - [ ] Supply-chain review, license inventory/SBOM and independent security review before product release.
 

@@ -95,3 +95,13 @@ Unit-тесты проверяют конфигурацию, негативны�
 ## Cloud и релиз
 
 Полная установка разработчика: [CLOUD-DEVELOPMENT.md](CLOUD-DEVELOPMENT.md). Фактические возможности и Docker flags: [RUNBOOK.md](RUNBOOK.md). Условия слияния и выпуска: [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md).
+
+## Дополнительные VM и transport проверки
+
+QEMU adapter, deterministic guest packer и collector команды описаны в [RUNBOOK.md](RUNBOOK.md) и [lab/README.md](lab/README.md). Сначала выполните presence-only preflight:
+
+```sh
+uv run --locked python scripts/lab_preflight.py
+```
+
+Exit 2 означает отсутствие базовых предпосылок; даже exit 0 не подтверждает boot artifacts, permissions/provenance и containment. Не генерировать положительную attestation для исправления статуса. Guest build требует только утверждённые локальные vendor files; установка QEMU, выбор версии kernel и отдельный lab host выполняются администратором в разрешённой инфраструктуре. Development Cloud не становится лабораторией после установки пакетов.

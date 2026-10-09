@@ -23,7 +23,7 @@ jobs:
       - run: uv run --locked python scripts/smoke.py
       - run: uv run --locked python scripts/cli_smoke.py
       - run: uv build
-      - run: bash -n scripts/cloud_setup.sh scripts/cloud_check.sh
+      - run: bash -n scripts/cloud_setup.sh scripts/cloud_check.sh lab/vm-init
       - run: uv run --locked python scripts/cloud_capabilities.py
       - name: Private umask key regression
         run: |

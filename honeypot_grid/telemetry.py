@@ -27,6 +27,9 @@ class Telemetry:
               sequence INTEGER PRIMARY KEY, at INTEGER NOT NULL,
               action TEXT NOT NULL, count INTEGER NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS deliveries (
+              id TEXT PRIMARY KEY, fingerprint TEXT NOT NULL, expires INTEGER NOT NULL
+            );
         """)
 
     def close(self):
@@ -108,12 +111,95 @@ class Telemetry:
         with self.db:
             self.db.execute("BEGIN IMMEDIATE")
             count = self.db.execute("DELETE FROM events WHERE expires<=?", (now,)).rowcount
+            self.db.execute("DELETE FROM deliveries WHERE expires<=?", (now,))
             if count:
                 self.db.execute(
                     "INSERT INTO telemetry_audit(at, action, count) VALUES (?, 'purged', ?)",
                     (now, count),
                 )
         return count
+
+    def ingest_deliveries(self, batch, key, epoch, sensor_id, service) -> dict:
+        """Atomic receipt + minimized event; retry identity survives key/epoch rotation.
+
+        No source address is collected by these sensors. Never invent an IP to fit
+        the legacy import schema. Receipt fingerprints include the random delivery
+        ID, not raw payload or source identity. Replay protection lasts retention.
+        """
+        identifier(epoch)
+        identifier(sensor_id)
+        if service not in ("http-mock", "ssh-mock"):
+            raise Rejected("invalid delivery scope")
+        if type(key) is not bytes or len(key) != 32:
+            raise Rejected("32-byte pseudonym key required")
+        if type(batch) is not list or not 1 <= len(batch) <= 100:
+            raise Rejected("invalid delivery batch")
+        now = checkpoint(self.db, self.clock)
+        rows = {}
+        for envelope in batch:
+            fields(envelope, {"transport_version", "delivery_id", "event"})
+            if type(envelope["transport_version"]) is not int or envelope["transport_version"] != 1:
+                raise Rejected("unsupported delivery protocol")
+            from .policy import digest_identifier
+
+            delivery_id = digest_identifier(envelope["delivery_id"])
+            event = envelope["event"]
+            aggregate([event])
+            if event["sensor_id"] != sensor_id or event["service"] != service:
+                raise Rejected("delivery outside collector scope")
+            stamp = integer(event["timestamp"], max(0, now - self.retention + 1), now + 5)
+            token = hashlib.sha256(("delivery:" + delivery_id).encode()).hexdigest()
+            fingerprint = hashlib.sha256(canonical(envelope).encode()).hexdigest()
+            if token in rows and rows[token][0] != fingerprint:
+                raise Rejected("delivery replay content mismatch")
+
+            def pseudonym(domain, value):
+                return hmac.new(
+                    key, canonical([epoch, domain, value]).encode(), hashlib.sha256
+                ).hexdigest()
+
+            rows[token] = (
+                fingerprint,
+                (
+                    pseudonym("delivery-event", delivery_id),
+                    epoch,
+                    pseudonym("sensor", sensor_id),
+                    pseudonym("source-uncollected", "none"),
+                    stamp,
+                    service,
+                    event["category"],
+                    stamp + self.retention,
+                ),
+            )
+        inserted = 0
+        with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            pending = []
+            for token, (fingerprint, row) in rows.items():
+                previous = self.db.execute(
+                    "SELECT fingerprint FROM deliveries WHERE id=?", (token,)
+                ).fetchone()
+                if previous:
+                    if previous[0] != fingerprint:
+                        raise Rejected("delivery replay content mismatch")
+                else:
+                    pending.append((token, fingerprint, row))
+            count = self.db.execute("SELECT count(*) FROM events").fetchone()[0]
+            receipts = self.db.execute("SELECT count(*) FROM deliveries").fetchone()[0]
+            if count + len(pending) > self.quota or receipts + len(pending) > self.quota:
+                raise Rejected("telemetry quota exceeded")
+            for token, fingerprint, row in pending:
+                self.db.execute("INSERT INTO events VALUES (?, ?, ?, ?, ?, ?, ?, ?)", row)
+                self.db.execute(
+                    "INSERT INTO deliveries VALUES (?, ?, ?)", (token, fingerprint, row[-1])
+                )
+            inserted = len(pending)
+            if inserted:
+                self.db.execute(
+                    "INSERT INTO telemetry_audit(at, action, count) VALUES (?, 'delivered', ?)",
+                    (now, inserted),
+                )
+        return {"ingested": inserted, "duplicates": len(batch) - inserted}
 
     def report(self, minimum_group=5) -> dict:
         integer(minimum_group, 5, 1000)

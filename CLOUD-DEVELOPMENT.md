@@ -35,7 +35,7 @@ bash scripts/cloud_check.sh
 
 Docker/KVM наличие диагностируется scripts/cloud_capabilities.py без обращения к daemon и без запуска VM. Даже наличие инструментов не подтверждает dedicated VM, отсутствие production routes, host credentials, enforcement или возможность вложенной виртуализации. Не создавать положительную VM attestation только по результатам presence checks.
 
-Отдельный lab host нужен для Docker acceptance и disposable VM executor. Подготовка: выделенная Linux VM, cgroup v2, Docker, seccomp и AppArmor/SELinux; для будущего VM executor — поддерживаемая виртуализация, отдельные read-only образы без credentials, запрет сети, ограниченный storage и гарантированная очистка. Конкретные provider/account/region, бюджет и разрешённый scope должны быть заданы владельцем до создания платных ресурсов.
+Отдельный lab host нужен для Docker acceptance и disposable VM executor. Подготовка: выделенная Linux VM, cgroup v2, Docker, seccomp и AppArmor/SELinux; для QEMU TCG executor — утверждённые kernel/initramfs и non-root lab user, отдельные read-only образы без credentials, запрет сети, ограниченный storage и гарантированная очистка. Конкретные provider/account/region, бюджет и разрешённый scope должны быть заданы владельцем до создания платных ресурсов.
 
 Отдельная лаборатория должна пройти реальные IPv4/IPv6 sentinel tests, crash recovery, TTL cleanup и orphan inventory checks из [RUNBOOK.md](RUNBOOK.md). Codex development environment нельзя автоматически считать такой лабораторией. Product deployment и публичный ingress не входят в настройку разработки.
 
@@ -54,3 +54,7 @@ Settings → Codex Cloud → Environments → honeypot-grid → Edit. Прове
 После proxy 403 для GitHub HTTPS публичный код импортирован проверенным git bundle через штатное вложение. Официальный setuptools 80.9.0 wheel проверен по SHA256 и сохранён в .cloud-env/wheels для offline build. Сетевая политика не менялась. Тест прав ключа исправлен для umask 0077 без ослабления production проверки. Docker executable/socket и cgroup обнаружены, KVM отсутствует; daemon и lab services не запускались.
 
 Новые данные о проверках записываются по результату, а не по намерению. Релизная готовность: [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md).
+
+## Новая реализация после опубликованного снимка
+
+VM/delivery изменения проверяются отдельно; опубликованная среда остаётся на 71de654. В текущем local workspace проходят 129 тестов, включая localhost integration и parent-death. Это не повторная проверка в Cloud task и не обновление его filesystem snapshot. Изолированная задача ранее запрещала создание localhost-сокетов; новые socket integration tests также требуют loopback-capable среды. Local lab preflight завершился с exit 2: нет QEMU, Docker/socket, KVM и boot artifacts; аккаунт root. Для реального VM/Docker acceptance нужен отдельный non-root lab host с утверждёнными images/scope.

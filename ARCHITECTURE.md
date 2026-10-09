@@ -2,7 +2,7 @@
 
 ## Статус и принципы
 
-Реализованы policy/manager, private storage, telemetry, review/intelligence, quarantine/static worker, bounded sensors и opt-in Docker adapter. По умолчанию используется mock; Docker profile не имеет внешнего ingress. Disposable VM executor, transport агента, cloud provisioning и внешняя auth остаются открытыми. Доверительные границы важнее числа функций; подробное состояние — [RUNBOOK.md](RUNBOOK.md).
+Реализованы policy/manager, private storage, telemetry, review/intelligence, quarantine/static worker, bounded sensors и opt-in Docker adapter. По умолчанию используется mock; Docker profile не имеет внешнего ingress. Добавлены opt-in QEMU executor и bounded stdout/Docker-log transport; реальный VM/Docker acceptance, cloud provisioning и внешняя auth остаются открытыми. Доверительные границы важнее числа функций; подробное состояние — [RUNBOOK.md](RUNBOOK.md).
 
 ## Менеджер
 
@@ -37,9 +37,9 @@ Default deny применяется к новым исходящим соеди�
 
 ## Сбор и обезличивание телеметрии
 
-Поток: приманка → агент → валидация схемы → приватное хранилище → privacy pipeline → review → публичный экспорт. Агент имеет write-only доступ к ingest, но не к управлению приманками. Очередь ограничена; переполнение фиксируется агрегированной метрикой, без снятия ограничений.
+Поток: приманка → агент → валидация схемы → приватное хранилище → privacy pipeline → review → публичный экспорт. Целевой отдельный агент должен иметь write-only доступ к ingest. Текущий доверенный локальный Docker collector имеет доступ к runtime socket и не является write-only изолированным агентом. Очередь ограничена; переполнение фиксируется агрегированной метрикой, без снятия ограничений.
 
-Текущий ingest event: schema_version, event_id, sensor_id, source_ip, timestamp, service, category. Идентификаторы/IP не сохраняются напрямую: ingestion заменяет их HMAC. Sensor stdout не включает source_ip и не подключён к ingest; будущий transport должен сформировать и проверить этот envelope без записи raw payload. Ограничиваются размер сообщения, глубина JSON, число полей и частота. Неизвестные поля отклоняются; строки экранируются для отчётов.
+Текущий ingest event: schema_version, event_id, sensor_id, source_ip, timestamp, service, category. Идентификаторы/IP не сохраняются напрямую: ingestion заменяет их HMAC. Отдельный transport envelope содержит transport_version=1, random delivery_id и пяти-полевый sensor event. Sensor stdout не включает IP; collector хранит HMAC source-uncollected, не выдумывая source_ip для legacy import. Receipt и event записываются атомарно; повтор после рестарта/rotation не дублирует событие, изменение содержимого под тем же ID отклоняется. Dedup receipt удаляется вместе с retention. Блокировка/ошибка после committed batch допускает повтор всего snapshot. Docker logs читаются между двумя проверками ownership/security. Ограничиваются размер сообщения, глубина JSON, число полей и частота. Неизвестные поля отклоняются; строки экранируются для отчётов.
 
 По умолчанию не собираются пароли, токены, полные тела запросов и содержимое файлов. Сырые адреса, имена пользователей, пути, query strings, заголовки и stack traces могут содержать чувствительные данные. Они удаляются или заменяются до экспорта. Для временной корреляции допускается keyed HMAC с ключом вне репозитория и периодической ротацией. Обычный хеш адреса не защищает от перебора.
 
@@ -51,7 +51,7 @@ Default deny применяется к новым исходящим соеди�
 
 Архивы ограничены по глубине, количеству объектов и суммарному распакованному размеру; пути нормализуются, symlink и path traversal отклоняются. Парсеры также недоверенны: им нужны таймауты и ограничения ресурсов. Динамический анализ не входит в первый MVP и требует отдельного containment review.
 
-Результат возвращается через ограниченный структурированный канал, проходит валидацию и privacy review. VM уничтожается после задания независимо от успеха. Исходные образцы не попадают в git, CI, issue attachments или внешние репутационные сервисы.
+Результат возвращается через ограниченный структурированный канал, проходит валидацию и privacy review. VM executor запускает фиксированный QEMU TCG argv: 256 MiB, 1 vCPU, без NIC/monitor/host mounts, raw read-only input disk, sealed memfd kernel/initramfs/sample и 30-секундный deadline. Одноразовый approval связывает sample, trusted boot hashes, scope и policy. Вывод ограничен 64 KiB и проверяется по nonce/hash/schema. Process-group cleanup и parent-death signal уничтожают процесс; guest poweroff завершает успешный boot. Нет постоянного writable guest disk. Реальная boot/teardown проверка остаётся отдельным gate. Исходные образцы не попадают в git, CI, issue attachments или внешние репутационные сервисы.
 
 ## IoC и ИИ
 

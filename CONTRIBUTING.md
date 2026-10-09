@@ -27,7 +27,7 @@ Policy enforcement отделён от LLM и недоверенных данн�
 
 Поддерживать README.md, ROADMAP.md, INSTALL.md, CHANGELOG.md, LICENSE и SECURITY.md. При изменении архитектуры синхронизировать ARCHITECTURE.md и THREAT-MODEL.md. README и INSTALL содержат только существующие команды; планы явно обозначены.
 
-Для кода: unit-тесты политики и парсеров, интеграционные тесты отказов, containment и privacy tests по [INSTALL.md](INSTALL.md). Реализованы локальные pipeline и opt-in Docker adapter; fake runner tests не заменяют лабораторные проверки. Выполняйте uv sync --locked, Ruff check/format, pytest, scripts/smoke.py, scripts/cli_smoke.py и uv build. Cloud setup проверяется через scripts/cloud_setup.sh и scripts/cloud_check.sh. Прохождение unit-тестов не является прохождением network containment.
+Для кода: unit-тесты политики и парсеров, интеграционные тесты отказов, containment и privacy tests по [INSTALL.md](INSTALL.md). Реализованы локальные pipeline, delivery collector, QEMU VM adapter и opt-in Docker adapter; fake runner tests не заменяют лабораторные проверки. Выполняйте uv sync --locked, Ruff check/format, pytest, scripts/smoke.py, scripts/cli_smoke.py и uv build. Cloud setup проверяется через scripts/cloud_setup.sh и scripts/cloud_check.sh. Прохождение unit-тестов не является прохождением network containment.
 
 Для документации: проверить локальные ссылки, отсутствие секретов и реальных инфраструктурных адресов, согласованность статуса, терминов и roadmap. Проверки ссылок не требуют сети. Не добавлять скачивание/исполнение образцов для тестирования.
 

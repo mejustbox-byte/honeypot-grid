@@ -13,9 +13,11 @@ Python provides one maintainable language for manager policy, privacy, bounded m
 | Packaging | setuptools 80.9.0 | Console entry point, wheel/sdist; private/cache directories excluded |
 | Storage | stdlib SQLite, JSON and HMAC-SHA256 | Private single-host state with quotas; not multi-tenant authentication |
 | Sensor runtime | Docker Engine on approved dedicated Linux VM | cgroup v2 + seccomp + AppArmor/SELinux; fixed local image digest; network none |
-| File sandbox | Disposable VM/microVM required, executor absent | A container or process resource limit is insufficient |
+| File sandbox | Opt-in QEMU TCG on dedicated Linux host; approved kernel/initramfs | 256 MiB/1 vCPU, no NIC, sealed raw input; real boot acceptance open |
 | Analysis | Offline rules and validated proposal files | No installed LLM SDK/provider, no tool execution |
 | CI | GitHub Actions, read-only contents | checkout v4.2.2/setup-python v5.6.0 pinned to SHA; Python 3.14.7 |
+
+QEMU version and kernel/initramfs artifact hashes must be selected, reviewed and recorded on the actual lab host; no boot version is claimed verified here. KVM is optional: the implemented profile uses TCG. The deterministic initramfs packer uses reviewed local binaries only; it never downloads images or samples.
 
 Go, Kubernetes, brokers and PostgreSQL are deferred until delivery/scale measurements justify another runtime or service. Compose and rootless support are not supplied by the current adapter. No strict type checker or web UI/API is currently configured.
 

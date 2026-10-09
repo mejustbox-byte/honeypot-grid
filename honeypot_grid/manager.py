@@ -265,6 +265,44 @@ class Manager:
             for row in self.db.execute("SELECT hash, state, expires FROM runs ORDER BY hash")
         ]
 
+    def collect(self, digest, scope, operator, store, key, epoch):
+        """Read a verified finite Docker snapshot, then atomically ingest deliveries."""
+        import io
+
+        from .transport import collect
+
+        config = self._observed_config(digest, scope, operator)
+        output = self.runtime.delivery_snapshot(digest, config)
+        result = collect(io.BytesIO(output), store, key, epoch, config.lab_id, config.service)
+        with self.db:
+            self._audit(digest, "delivery-collected")
+        return result
+
+    def _observed_config(self, digest, scope, operator):
+        import json
+
+        digest_identifier(digest)
+        identifier(operator)
+        self._checkpoint()
+        if self.runtime is None:
+            raise Rejected("Docker runtime required for delivery")
+        row = self.db.execute(
+            "SELECT plan, owner, state FROM runs WHERE hash=?", (digest,)
+        ).fetchone()
+        if not row or row[1] != operator or row[2] != "observing":
+            raise Rejected("delivery outside observed owner scope")
+        value = json.loads(row[0])
+        if plan_hash(value) != digest or value["adapter"] != self.adapter:
+            raise Rejected("invalid stored delivery plan")
+        return Config.parse(value["config"] | {"isolation": value["isolation"]}, scope)
+
+    def lab_probe(self, digest, scope, operator):
+        config = self._observed_config(digest, scope, operator)
+        result = self.runtime.lab_probe(digest, config)
+        with self.db:
+            self._audit(digest, "lab-probed")
+        return result
+
     def audit(self) -> list[dict]:
         return [
             dict(zip(("sequence", "at", "plan_hash", "action"), row, strict=True))
