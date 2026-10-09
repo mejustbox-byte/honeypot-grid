@@ -4,6 +4,8 @@
 
 ## Статус
 
+Проект не выпущен; версия пакета 0.1.0 не означает готовый релиз. Условия выпуска: [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md).
+
 Реализованы менеджер lifecycle, приватное SQLite-хранение, HMAC telemetry/retention, HTTP/SSH synthetic sensors, Docker network-none адаптер, карантин, static metadata worker, offline анализ и подтверждаемый синтетический IoC export. По умолчанию используется mock. Контейнеры доступны только в отдельно подготовленной VM; их containment здесь не проверен.
 
 Полной production-реализации ещё нет: disposable VM executor, доставка событий, облачное provisioning и реальные сетевые acceptance tests остаются открытыми. Точное состояние и команды: [RUNBOOK.md](RUNBOOK.md).
@@ -26,7 +28,7 @@
 - Исходящие соединения запрещены по умолчанию (egress deny), включая DNS и cloud metadata.
 - Реальные credentials, адреса инфраструктуры, персональные данные и weaponized samples не входят в репозиторий, CI, issues, PR и публичные отчёты.
 - Контейнер не считается достаточной границей для запуска недоверенного кода. Анализ файлов требует отдельной VM или microVM.
-- ИИ-анализ, если будет добавлен, получает только проверенные очищенные данные; его вывод не исполняется и не меняет политики.
+- Подключаемый в будущем LLM provider получает только проверенные очищенные данные; его вывод не исполняется и не меняет политики.
 
 Примеры используют только домен `sensor.example.invalid` и лабораторные идентификаторы. Полные сетевые конфигурации реальных сред хранятся отдельно.
 
@@ -36,7 +38,8 @@
 
 ```sh
 uv sync --locked
-uv run --locked python -m honeypot_grid plan --config examples/lab.json --scope examples/scope.json
+mkdir -m 700 lab-private
+uv run --locked honeypot-grid --database lab-private/state.sqlite3 plan --config examples/lab.json --scope examples/scope.json
 uv run --locked pytest -q
 ```
 

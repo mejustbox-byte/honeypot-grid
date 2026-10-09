@@ -41,6 +41,12 @@ Docker/KVM наличие диагностируется scripts/cloud_capabilit
 
 ## Обновление сохранённой среды
 
-Settings → Codex Cloud → Environments → honeypot-grid → Edit. Проверить setup results, сохранить и Republish, затем запустить новую задачу и проверить HEAD/versions/exit codes. Если интерфейс сообщает «Не удалось подтвердить статус публикации», это блокер публикации: продолжить в исходном клиенте мастера. Не считать редактируемый текст успешно сохранённым снимком.
+Settings → Codex Cloud → Environments → honeypot-grid → Edit. Проверить setup results, сохранить и Republish, затем запустить новую задачу и проверить HEAD/versions/exit codes. Если старый чат сообщает «Не удалось подтвердить статус публикации», открыть штатный Edit из Settings и проверить новый черновик; при сохраняющейся ошибке продолжить в исходном клиенте мастера. Не считать редактируемый текст успешно сохранённым снимком.
 
 Официальный процесс: [OpenAI Cloud environments](https://learn.chatgpt.com/docs/environments/cloud-environments).
+
+## Последняя попытка обновления, 2026-10-09
+
+В setup VM получение product commit по GitHub HTTPS вернуло proxy 403. Подготовлен проверенный git bundle и передан штатным вложением для импорта в существующий checkout; это не изменение сетевой политики. Выполнение product install, сохранение нового filesystem и Republish ещё должны быть подтверждены. Docker executable/socket и cgroup обнаружены, KVM отсутствует; daemon и lab services не запускались. Bundle импортирован; первый product pytest run выявил зависимость теста ключа от umask. Fixture исправлена и локально проходят 84 теста при umask 0077. Для Cloud build отсутствует setuptools 80.9.0; официальный wheel передаётся отдельно с SHA256, сохраняется в .cloud-env/wheels и используется через UV_FIND_LINKS без включения сети. Повторный полный Cloud check и Republish пока ожидаются.
+
+Новые данные о проверках записываются по результату, а не по намерению. Релизная готовность: [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md).

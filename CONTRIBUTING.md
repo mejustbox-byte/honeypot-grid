@@ -21,13 +21,13 @@
 
 Policy enforcement отделён от LLM и недоверенных данных. Нужны dry-run по умолчанию, проверка scope непосредственно перед действием, ограниченное подтверждение человеком, TTL, аудит и stop. Нет shell-команд из event или AI output. Новое сетевое исключение должно иметь обоснование и негативные тесты.
 
-Новые адаптеры не могут требовать privileged, host networking, runtime socket или production credentials. Парсеры и анализаторы файлов запускаются за отдельной границей изоляции.
+Приманки и sample VM не могут требовать privileged, host networking, runtime socket или production credentials. Доверенный Docker manager обращается к socket только на утверждённом выделенном lab host. Парсеры и анализаторы файлов запускаются за отдельной границей изоляции.
 
 ## Документация и тесты
 
 Поддерживать README.md, ROADMAP.md, INSTALL.md, CHANGELOG.md, LICENSE и SECURITY.md. При изменении архитектуры синхронизировать ARCHITECTURE.md и THREAT-MODEL.md. README и INSTALL содержат только существующие команды; планы явно обозначены.
 
-Для кода: unit-тесты политики и парсеров, интеграционные тесты отказов, containment и privacy tests по [INSTALL.md](INSTALL.md). Offline mock реализация и CI добавлены. Выполняйте uv sync --locked, Ruff check/format, pytest и scripts/smoke.py. Прохождение unit-тестов не является прохождением network containment.
+Для кода: unit-тесты политики и парсеров, интеграционные тесты отказов, containment и privacy tests по [INSTALL.md](INSTALL.md). Реализованы локальные pipeline и opt-in Docker adapter; fake runner tests не заменяют лабораторные проверки. Выполняйте uv sync --locked, Ruff check/format, pytest, scripts/smoke.py, scripts/cli_smoke.py и uv build. Cloud setup проверяется через scripts/cloud_setup.sh и scripts/cloud_check.sh. Прохождение unit-тестов не является прохождением network containment.
 
 Для документации: проверить локальные ссылки, отсутствие секретов и реальных инфраструктурных адресов, согласованность статуса, терминов и roadmap. Проверки ссылок не требуют сети. Не добавлять скачивание/исполнение образцов для тестирования.
 
@@ -39,3 +39,7 @@ Policy enforcement отделён от LLM и недоверенных данн�
 - [ ] Проверки указаны вместе с невыполненными проверками.
 - [ ] Threat model обновлена, если затронуты доверительные границы.
 - [ ] Публичные данные и примеры синтетические; секретов и образцов нет.
+
+## Слияние и выпуск
+
+Владелец разрешил слияние и релиз при готовности. До завершения [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md) продукт не выпускается. PR #2 основан на документационном PR #1; сначала проверить и объединить базу, затем retarget и проверить финальный кандидат. Cloud snapshot обновляется отдельно по [CLOUD-DEVELOPMENT.md](CLOUD-DEVELOPMENT.md).

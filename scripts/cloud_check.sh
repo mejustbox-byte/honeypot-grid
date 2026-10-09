@@ -5,6 +5,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 export UV_CACHE_DIR="$PWD/.cloud-env/cache"
 export UV_PYTHON_INSTALL_DIR="$PWD/.cloud-env/python"
 export UV_PYTHON_BIN_DIR="$PWD/.cloud-env/bin"
+if [ -d .cloud-env/wheels ]; then
+  export UV_FIND_LINKS="$PWD/.cloud-env/wheels"
+fi
 export UV_OFFLINE=1
 export PATH="$PWD/.venv/bin:/usr/bin:/bin"
 read -r tool_name tool_version _ <<< "$(uv --version)"

@@ -18,6 +18,7 @@ REQUIRED = (
     "TECH-STACK.md",
     "RUNBOOK.md",
     "CLOUD-DEVELOPMENT.md",
+    "RELEASE-CHECKLIST.md",
 )
 
 

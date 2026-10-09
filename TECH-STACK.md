@@ -1,49 +1,40 @@
-# Стек разработки
+# Development stack
 
-## Решение
+## Decision and fixed versions
 
-Выбран Python для offline manager, политик, нормализации и статического анализа метаданных. Небольшая команда получает один язык, зрелую библиотеку JSON/IP/криптографических примитивов и простой тестовый workflow. Enforcement сети и VM остаётся обязанностью runtime/инфраструктуры; Python не является sandbox.
+Python provides one maintainable language for manager policy, privacy, bounded metadata processing and local tooling. Enforcement belongs to the lab VM/runtime; Python is not a sandbox. The project has no third-party runtime dependencies.
 
-| Область | Выбор | Обоснование и ограничения |
+| Area | Current choice | Reason / boundary |
 | --- | --- | --- |
-| Runtime | CPython 3.14.x, Linux x86_64 | Поддерживаемая ветка с bugfix-обновлениями; точный patch фиксируется при проверке Cloud |
-| Пакетный менеджер | uv, стабильный выпуск | Единый workflow, uv.lock; конкретная версия и lock будут проверены перед установкой зависимостей |
-| Минимальный smoke | Стандартная библиотека Python | Нет зависимости от сети, package index или секретов |
-| Тестовый стек | pytest; unittest для bootstrap smoke | pytest для unit/integration, синтетические fixtures; containment отдельно в лаборатории |
-| Линтер/форматтер | Ruff | Один инструмент для lint и format; параметры в будущем pyproject.toml |
-| Типизация | Python type hints; строгая проверка на следующем этапе | Без добавления второго языка до появления обоснованной необходимости |
-| Контейнеризация | Linux OCI-контейнеры, Docker Engine в отдельной VM; Compose v2 для лаборатории | Минимум orchestration; rootless где доступно, без privileged/host namespaces |
-| File sandbox | Отдельная одноразовая VM/microVM | Контейнерного ядра недостаточно для анализа недоверенных файлов |
-| CI | GitHub Actions на Linux, минимальные read permissions | Smoke/docs → lint/types/unit → изолированные integration по мере появления кода |
-| Хранение MVP | Локальные JSON-схемы и SQLite для состояния | Простая эксплуатация; production multi-tenancy требует отдельного решения |
+| Runtime | CPython 3.14.7, Linux x86_64 cloud development | Verified target, fixed in .python-version; package requires >=3.14,<3.15 |
+| Package manager | uv 0.12.19 | Locked sync and offline cache; uv.lock records development dependencies |
+| Tests | pytest 9.1.1 | Unit, fake-runtime integration and harmless localhost sensor tests |
+| Lint / format | Ruff 0.16.10 | Unified checks configured in pyproject.toml |
+| Packaging | setuptools 80.9.0 | Console entry point, wheel/sdist; private/cache directories excluded |
+| Storage | stdlib SQLite, JSON and HMAC-SHA256 | Private single-host state with quotas; not multi-tenant authentication |
+| Sensor runtime | Docker Engine on approved dedicated Linux VM | cgroup v2 + seccomp + AppArmor/SELinux; fixed local image digest; network none |
+| File sandbox | Disposable VM/microVM required, executor absent | A container or process resource limit is insufficient |
+| Analysis | Offline rules and validated proposal files | No installed LLM SDK/provider, no tool execution |
+| CI | GitHub Actions, read-only contents | checkout v4.2.2/setup-python v5.6.0 pinned to SHA; Python 3.14.7 |
 
-MVP pins: CPython 3.14.7 (.python-version), uv 0.12.19, pytest 9.1.1, Ruff 0.16.10 (pyproject.toml и uv.lock). Runtime-зависимостей нет; lock включает dev tools и транзитивные зависимости с hashes. GitHub Actions checkout v4.2.2 и setup-python v5.6.0 закреплены на проверенные SHA в CI. Docker adapter использует только заранее одобренный локальный image digest; синтетический digest в примере не относится к реальному image. Не использовать floating latest images в будущей лаборатории.
+Go, Kubernetes, brokers and PostgreSQL are deferred until delivery/scale measurements justify another runtime or service. Compose and rootless support are not supplied by the current adapter. No strict type checker or web UI/API is currently configured.
 
-## Альтернативы
+## Reproducibility and supply chain
 
-Go подходит для агента хоста, но второй runtime пока увеличивает сопровождение; рассмотреть при измеренных требованиях к доставке агента. Kubernetes, брокер и PostgreSQL отложены до подтверждённой необходимости масштабирования. Web API, UI, LLM SDK и динамический анализ файлов не нужны для первого offline manager MVP.
+Use uv sync --locked; dependency updates require manifest/lock review. uv build caches the exact build requirement before offline checks. MANIFEST.in includes docs/scripts/examples and excludes .cloud-env, .venv, quarantine and lab-private. LICENSE remains the original MIT text. Do not use floating container tags; examples contain a fictional digest that must never be treated as a real approved image.
 
-## Политика зависимостей и CI
+CI runs lint/format, pytest, documentation and installed CLI smoke, packaging and cloud-script syntax/capability checks. Hosted CI status must be checked separately; local success does not establish a hosted run. Dependency vulnerability/license inventory and release SBOM are release gates, not yet completed.
 
-Первый smoke запускается без сторонних зависимостей. При добавлении pyproject.toml создавать проверенный uv.lock, обновлять через отдельный PR и использовать uv sync --locked в CI для проверки актуальности lock. При зависимостях проверять provenance, лицензии и известные уязвимости. Actions фиксировать на проверенные commit SHA; CI не получает deployment secrets и не запускает samples.
+## Cloud acceptance
 
-## Codex Cloud — критерии принятия
+Only mejustbox-byte/honeypot-grid belongs to this environment. Keep access private, project secrets absent and agent internet disabled. Do not read or print platform authentication. Use [CLOUD-DEVELOPMENT.md](CLOUD-DEVELOPMENT.md) for installation/startup and [RUNBOOK.md](RUNBOOK.md) for lab limits.
 
-После фиксации этого документа создать отдельную среду только для mejustbox-byte/honeypot-grid. Не подключать другие repositories или production accounts. Setup не должен читать секреты, запускать приманки или открывать ingress. Установочный доступ к сети и сеть агента настраиваются отдельно; после setup для offline задач использовать отключённый доступ к интернету, если настройка доступна.
+On 2026-10-09, the older documentation snapshot at 4220023 restored successfully. New product install/offline-check scripts pass locally. Updating the actual Cloud snapshot and verifying a fresh task is tracked independently in [ROADMAP.md](ROADMAP.md). A GitHub proxy 403 was observed during the update attempt; this is evidence for that request, not proof of all network containment. Docker presence and absent KVM in the setup VM do not qualify it as a sample laboratory.
 
-Проверка: подтвердить выбранный repository/branch и commit, Python 3.14.x, изолированный workspace, отсутствие настроенных project secrets, затем выполнить:
+## Primary references
 
-```sh
-python3 scripts/smoke.py
-```
-
-Наличие временной управляемой платформой GitHub-аутентификации не равняется секретам проекта; не печатать env, токены или credential-файлы. Проверка secrets проводится через настройки среды и ограниченный аудит, без раскрытия значений. Абсолютное отсутствие любых платформенных credentials не заявляется.
-
-Статус на 2026-10-09: отдельная среда только для honeypot-grid опубликована; восстановление в новой задаче и documentation smoke на commit 4220023e9cb458d94e4c80e7aa01481eaa3d8e70, Python 3.14.7 прошли. Project secrets и пользовательские переменные отсутствуют. Интернет выключен в настройках, но применение сетевой политики имеет статус unknown. MVP проверяется отдельно в ветке реализации. Сохранённый установочный скрипт среды закреплён на documentation commit: для перехода на новый commit потребуется обновление snapshot после review, без автоматического включения сети. Готовность реальной лаборатории не заявляется.
-
-## Источники
-
-- [Python version status](https://devguide.python.org/versions/)
-- [uv locking and syncing](https://docs.astral.sh/uv/concepts/projects/sync/)
+- [uv project locking/sync](https://docs.astral.sh/uv/concepts/projects/sync/)
 - [pytest](https://docs.pytest.org/en/stable/getting-started.html)
 - [Ruff](https://docs.astral.sh/ruff/)
+- [Docker container options](https://docs.docker.com/engine/containers/run/)
+- [OpenAI Cloud environments](https://learn.chatgpt.com/docs/environments/cloud-environments)

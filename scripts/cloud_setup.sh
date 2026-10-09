@@ -11,6 +11,9 @@ test "$tool_name $tool_version" = 'uv 0.12.19'
 export UV_CACHE_DIR="$PWD/.cloud-env/cache"
 export UV_PYTHON_INSTALL_DIR="$PWD/.cloud-env/python"
 export UV_PYTHON_BIN_DIR="$PWD/.cloud-env/bin"
+if [ -d .cloud-env/wheels ]; then
+  export UV_FIND_LINKS="$PWD/.cloud-env/wheels"
+fi
 uv sync --locked --python 3.14.7
 # Populate the build cache before offline verification.
 uv build

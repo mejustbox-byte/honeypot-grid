@@ -50,6 +50,7 @@ def test_private_storage_and_links(tmp_path):
 def test_key_never_returned_and_private(tmp_path):
     key = tmp_path / "example.key"
     key.write_bytes(b"x" * 32)
+    key.chmod(0o644)
     with pytest.raises(Rejected):
         read_key(key)
     key.chmod(0o600)

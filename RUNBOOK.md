@@ -48,3 +48,7 @@ Runtime effect нельзя откатить SQLite-транзакцией: dura
 Не выполнены: настоящий disposable VM executor файлов, автоматическая доставка событий, VM/cloud provisioning, аутентификация внешнего control plane, LLM provider и утверждённая ingress topology. Они требуют выбранной инфраструктуры и закрытого scope. Для допуска лаборатории обязательны реальные IPv4/IPv6 DNS/metadata/production/sibling sentinel tests, аварии менеджера/Docker, независимый TTL teardown и проверка отсутствия orphan resources. В этой среде Docker/VM отсутствуют; эти проверки не запускались. Публичное развёртывание не готово.
 
 Официальные сведения: [Docker network none](https://docs.docker.com/engine/network/drivers/none/), [container resource/security options](https://docs.docker.com/engine/containers/run/).
+
+## Разработка и выпуск
+
+Облачная установка и восстановление: [CLOUD-DEVELOPMENT.md](CLOUD-DEVELOPMENT.md). Разрешение владельца на merge/release действует после проверки готовности по [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md); сейчас продукт остаётся unreleased.
