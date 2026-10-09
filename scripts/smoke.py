@@ -1,13 +1,21 @@
 """Offline bootstrap: validates documentation; does not deploy or access the network."""
+
 import re
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = (
-    "README.md", "ROADMAP.md", "INSTALL.md", "CHANGELOG.md", "LICENSE",
-    "SECURITY.md", "ARCHITECTURE.md", "THREAT-MODEL.md",
-    "CONTRIBUTING.md", "TECH-STACK.md",
+    "README.md",
+    "ROADMAP.md",
+    "INSTALL.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "SECURITY.md",
+    "ARCHITECTURE.md",
+    "THREAT-MODEL.md",
+    "CONTRIBUTING.md",
+    "TECH-STACK.md",
 )
 
 
@@ -31,7 +39,7 @@ def main():
                 raise ValueError(f"Invalid local link in {name}")
             checked_links += 1
     print(f"PASS: {len(REQUIRED)} documents, {checked_links} local links; offline smoke.")
-    print(f"Runtime: Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}")
+    print("Runtime: Python " + ".".join(str(part) for part in sys.version_info[:3]))
     if sys.version_info[:2] != (3, 14):
         print("NOTE: target Cloud runtime 3.14 has not been verified by this run.")
     return 0
@@ -42,4 +50,4 @@ if __name__ == "__main__":
         raise SystemExit(main())
     except (OSError, ValueError) as exc:
         print(f"FAIL: {exc}", file=sys.stderr)
-        raise SystemExit(1)
+        raise SystemExit(1) from exc

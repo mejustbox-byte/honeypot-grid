@@ -1,6 +1,6 @@
 # Roadmap
 
-Порядок этапов определяется containment, а не числом функций. Документация описывает требования; реализация ещё не начата.
+Порядок этапов определяется containment, а не числом функций. Первый offline mock MVP реализован; реальная лаборатория и containment ещё впереди.
 
 ## Этап 0 — проектирование
 
@@ -8,17 +8,19 @@
 - [x] Threat model, требования egress deny и защиты от pivoting.
 - [x] Privacy, sandbox, IoC и contribution guide.
 - [x] Выбор стека зафиксирован в TECH-STACK.md.
-- [ ] Точные pins зависимостей и runtime проверены в отдельной Codex Cloud среде.
-- [ ] Cloud smoke и отсутствие project secrets подтверждены.
+- [x] Точные pins зависимостей и runtime проверены в отдельной Codex Cloud среде.
+- [x] Cloud smoke и отсутствие project secrets подтверждены.
 - [ ] Review архитектуры и модели угроз сопровождающим.
 
 ## Этап 1 — offline manager MVP
 
-- [ ] Типизированная конфигурация и явный scope.
-- [ ] Dry-run по умолчанию и mock provisioning adapter.
-- [ ] Конечный автомат, TTL, идемпотентность и аудит.
-- [ ] Human-in-the-loop: хеш плана, identity, expiry и одноразовость.
-- [ ] Unit-тесты негативных сценариев.
+- [x] Типизированная конфигурация и явный scope.
+- [x] Dry-run по умолчанию и mock provisioning adapter.
+- [x] Конечный автомат, TTL, идемпотентность и аудит.
+- [x] Human-in-the-loop: хеш плана, identity, expiry и одноразовость.
+- [x] Unit-тесты негативных сценариев.
+
+MVP identity пока является декларацией доверенного локального оператора; TTL reconciliation запускается явно. Реальный adapter и внешняя аутентификация отсутствуют.
 
 Готовность: неправильная политика и подтверждение не запускают действие; всё работает на синтетических fixtures без облачного доступа.
 
@@ -33,6 +35,8 @@
 Готовность: независимый от приманки enforcement проходит containment и recovery tests; не остаются orphan resources.
 
 ## Этап 3 — телеметрия
+
+Добавлен только bounded offline batch из синтетических нормализованных событий: allowlist полей, агрегация по дню и подавление групп <5. Production ingest/retention/HMAC ещё не реализованы.
 
 - [ ] Bounded ingest, versioned schema и нормализация.
 - [ ] Минимизация, keyed pseudonyms, retention и privacy review.

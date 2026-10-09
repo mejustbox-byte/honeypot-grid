@@ -31,3 +31,12 @@
 
 - Определены исходные требования изоляции и приватности.
 - Добавлены базовые документы лицензии и безопасности.
+
+## Unreleased — offline manager MVP (2026-10-09)
+
+- Строгая bounded JSON-конфигурация, scope allowlist и обязательные декларации изоляции.
+- CLI dry-run, привязанный к полному плану SHA-256 approval, срок, owner и одноразовость.
+- SQLite mock lifecycle, restart/concurrent idempotency, явный TTL reconcile и stop; атомарный аудит.
+- Синтетическая batch-агрегация, allowlist полей и подавление малых групп.
+- Python 3.14.7, uv 0.12.19, pytest 9.1.1, Ruff 0.16.10, uv.lock и CI с SHA-pinned Actions.
+- Реальные VM/контейнеры, сетевой enforcement, автоматический scheduler, внешняя аутентификация и публикация телеметрии не включены.
