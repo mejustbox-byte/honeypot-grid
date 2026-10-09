@@ -1,3 +1,4 @@
+# First alpha artifacts are frozen at the checked a59f6af merge commit.
 [project]
 name = "honeypot-grid"
 version = "0.1.0a1"
