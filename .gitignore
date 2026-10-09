@@ -1,0 +1,13 @@
+.venv/
+.cloud-env/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.sqlite3
+*.sqlite3-*
+*.egg-info/
+build/
+dist/
+*.key
+quarantine/
+lab-private/

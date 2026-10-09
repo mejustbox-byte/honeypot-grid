@@ -1,0 +1,31 @@
+[project]
+name = "honeypot-grid"
+version = "0.1.0a1"
+description = "Offline policy and mock lifecycle manager for isolated honeypot labs"
+requires-python = ">=3.14,<3.15"
+license = "MIT"
+dependencies = []
+
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+honeypot-grid = "honeypot_grid.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["honeypot_grid*"]
+
+[dependency-groups]
+dev = ["uv==0.12.19", "pytest==9.1.1", "ruff==0.16.10"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

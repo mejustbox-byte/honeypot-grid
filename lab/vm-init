@@ -1,0 +1,19 @@
+#!/bin/sh
+# Reviewed initramfs /init template, not a host script. No downloads or samples.
+set -eu
+export PATH=/usr/bin:/bin
+export HOME=/nonexistent
+umask 077
+finish() { /bin/busybox poweroff -f; }
+trap finish EXIT
+/bin/busybox mount -t proc -o nosuid,nodev,noexec proc /proc
+/bin/busybox mount -t sysfs -o ro,nosuid,nodev,noexec sysfs /sys
+/bin/busybox mount -t devtmpfs -o nosuid,noexec devtmpfs /dev
+# The only attached disk is an opaque framed sample, never a mounted filesystem.
+test -b /dev/vda
+/bin/busybox chown 65532:65532 /dev/vda
+/bin/busybox chmod 0400 /dev/vda
+# Guest image must ship these trusted executables and the installed project.
+/usr/bin/setpriv --reuid=65532 --regid=65532 --clear-groups --no-new-privs \
+  --inh-caps=-all --ambient-caps=-all --bounding-set=-all \
+  /usr/bin/python3 -I -c 'import sys; sys.path.insert(0, "/opt"); from honeypot_grid.vm_guest import main; sys.exit(main())'

@@ -1,0 +1,21 @@
+{
+  "lab_id": "lab-demo",
+  "owner": "lab-operator",
+  "authorization_ref": "demo-only",
+  "service": "http-mock",
+  "image_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "ttl_seconds": 600,
+  "memory_mib": 128,
+  "cpu_millicores": 250,
+  "isolation": {
+    "dedicated_vm": true,
+    "egress_ipv4": "deny",
+    "egress_ipv6": "deny",
+    "dns": false,
+    "metadata": false,
+    "privileged": false,
+    "host_namespaces": false,
+    "host_mounts": false,
+    "runtime_socket": false
+  }
+}

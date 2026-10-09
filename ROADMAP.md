@@ -1,60 +1,47 @@
 # Roadmap
 
-Порядок этапов определяется containment, а не числом функций. Документация описывает требования; реализация ещё не начата.
+The first alpha release is v0.1.0-alpha.1 (package 0.1.0a1); stable/production readiness remains open. Completed implementation and infrastructure acceptance are tracked separately; passing mocked tests does not complete a laboratory milestone.
 
-## Этап 0 — проектирование
+## Implemented and locally verified
 
-- [x] Архитектура менеджера, runtime и потоков данных.
-- [x] Threat model, требования egress deny и защиты от pivoting.
-- [x] Privacy, sandbox, IoC и contribution guide.
-- [x] Выбор стека зафиксирован в TECH-STACK.md.
-- [ ] Точные pins зависимостей и runtime проверены в отдельной Codex Cloud среде.
-- [ ] Cloud smoke и отсутствие project secrets подтверждены.
-- [ ] Review архитектуры и модели угроз сопровождающим.
+- [x] Architecture, threat model, fixed development stack and documentation checks.
+- [x] Strict configuration/scope, digest allowlist, dry-run, owner/expiry/single-use approval.
+- [x] Mock lifecycle, concurrency/restart idempotency, private SQLite, quotas and clock checkpoints.
+- [x] Opt-in Docker network-none adapter: resource/security inspection, durable provisioning, cleanup and inventory recovery (fake runner tests).
+- [x] Bounded synthetic localhost HTTP/SSH sensors without shell or credentials.
+- [x] HMAC ingestion, versioned minimal schema, retention, aggregate privacy canaries.
+- [x] Opaque bounded quarantine and expiry purge; archive metadata limits on harmless fixtures.
+- [x] Synthetic IoC profile with provenance/confidence/expiry and one-use reviewed export.
+- [x] Offline analysis and hash/schema/evidence-bound proposal validation without tools.
+- [x] Installed CLI, wheel/sdist, pinned CI and reproducible cloud install/check scripts.
+- [x] Versioned sensor delivery, atomic receipts, replay/rotation/retention and bounded local/Docker collectors.
+- [x] Hash-approved opt-in QEMU TCG executor, sealed artifacts/input, bounded results and process cleanup.
+- [x] Reviewed-file deterministic initramfs packer and fixed lab-probe command.
 
-## Этап 1 — offline manager MVP
+## Development environment acceptance
 
-- [ ] Типизированная конфигурация и явный scope.
-- [ ] Dry-run по умолчанию и mock provisioning adapter.
-- [ ] Конечный автомат, TTL, идемпотентность и аудит.
-- [ ] Human-in-the-loop: хеш плана, identity, expiry и одноразовость.
-- [ ] Unit-тесты негативных сценариев.
+- [x] Documentation-era Cloud snapshot restored at 4220023 with Python 3.14.7 and smoke exit 0.
+- [x] Published product bootstrap snapshot checks passed locally (84 tests); current VM/delivery implementation passes 129 local tests.
+- [x] Product snapshot 71de654 installed and fully checked in Cloud setup VM (84 tests; checks exit 0).
+- [x] Updated install/start instructions saved and Republish completed; private access and internet disabled retained.
+- [x] New task restored at 71de654; actual HEAD/versions and clean tracked state verified.
+- [ ] Full new-task checks: offline sync exit 0, cloud_check exit 1 (81 passed, 3 localhost socket failures). Resolve the execution-environment compatibility without weakening isolation.
 
-Готовность: неправильная политика и подтверждение не запускают действие; всё работает на синтетических fixtures без облачного доступа.
+The published product snapshot supersedes the previous documentation snapshot. Follow [CLOUD-DEVELOPMENT.md](CLOUD-DEVELOPMENT.md) for the current setup and any publication blockers.
 
-## Этап 2 — изолированная лаборатория
+## Laboratory and product work remaining
 
-- [ ] Выделенные VM и непривилегированные контейнеры.
-- [ ] Egress deny IPv4/IPv6 и отдельные sensor segments.
-- [ ] Синтетические SSH/HTTP-приманки без proxy/shell.
-- [ ] Лимиты, stop работающего runtime и автоматический cleanup.
-- [ ] Тесты sentinel: DNS, metadata, соседи, control plane и production substitute.
+- [ ] Dedicated lab infrastructure, approved scope, routes, resource budget and authenticated control plane.
+- [ ] Actual Docker start/stop, crash recovery, independent TTL supervisor and orphan checks.
+- [ ] IPv4/IPv6 DNS/metadata/sibling/control-plane/production sentinel tests.
+- [ ] Approved ingress topology; current network-none profile has no external ingress.
+- [x] Local sensor-to-ingest transport, schema validation, bounded delivery and retry recovery.
+- [ ] Actual Docker-log delivery and outage recovery on an approved lab host.
+- [x] Disposable file VM executor adapter, bounded output and fail-closed approval.
+- [ ] Actual approved guest boot, hostile-output/deadline tests and verified VM teardown.
+- [ ] Optional selected LLM provider, secret handling and offline evaluation against false findings.
+- [ ] Supply-chain review, license inventory/SBOM and independent security review before product release.
 
-Готовность: независимый от приманки enforcement проходит containment и recovery tests; не остаются orphan resources.
+## Release gate
 
-## Этап 3 — телеметрия
-
-- [ ] Bounded ingest, versioned schema и нормализация.
-- [ ] Минимизация, keyed pseudonyms, retention и privacy review.
-- [ ] Приватное хранилище, ACL и агрегированные метрики.
-- [ ] Canary tests и безопасный экспорт.
-
-Готовность: чувствительные синтетические поля не попадают в публикацию; переполнение и отказы не ослабляют политику.
-
-## Этап 4 — sandbox и IoC
-
-- [ ] Карантин файлов и статический анализ в одноразовой VM/microVM.
-- [ ] Лимиты архивов, таймауты и уничтожение среды.
-- [ ] Provenance, confidence, expiry и ручная проверка IoC.
-- [ ] Профиль структурированного экспорта, затем оценка STIX-совместимости.
-
-Готовность: нет сети/credentials в sandbox, образцы не покидают закрытое хранилище, экспорт проходит privacy review.
-
-## Этап 5 — ИИ-анализ и эксплуатация
-
-- [ ] Анализ только очищенных данных; provider interface и offline evaluation.
-- [ ] Тесты prompt injection, доказательств и ложных выводов.
-- [ ] Supply-chain checks, SBOM и CI для реализованных компонентов.
-- [ ] Облачный adapter, бюджеты, runbooks и независимый security review.
-
-Публичное развёртывание и динамический анализ файлов требуют отдельного решения после review; они не включены автоматически в MVP. Сроки и production readiness пока не заявляются.
+The owner explicitly authorized the first release with local-infrastructure acceptance documented as user work. Alpha may be merged/released after code/package/docs checks with unverified lab gates clearly recorded in [LOCAL-PC.md](LOCAL-PC.md). These gates still block a stable production release. See [RELEASE-NOTES.md](RELEASE-NOTES.md) and [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md). STIX interoperability, multi-tenancy and scale-out remain future scope.

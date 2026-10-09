@@ -1,0 +1,11 @@
+include *.md uv.lock .python-version .dockerignore
+recursive-include scripts *.py *.sh
+recursive-include examples *.json
+recursive-include containers Dockerfile
+recursive-include lab *.md vm-init
+prune .cloud-env
+prune .venv
+prune lab-private
+prune quarantine
+prune dist
+prune build

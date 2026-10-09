@@ -1,0 +1,11 @@
+{
+  "lab_id": "lab-demo",
+  "owner": "lab-operator",
+  "authorization_ref": "demo-only",
+  "services": [
+    "http-mock"
+  ],
+  "image_digests": [
+    "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  ]
+}

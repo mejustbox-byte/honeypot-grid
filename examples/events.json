@@ -1,0 +1,39 @@
+{
+  "events": [
+    {
+      "schema_version": 1,
+      "sensor_id": "sensor-demo",
+      "timestamp": 1000,
+      "service": "http-mock",
+      "category": "connection"
+    },
+    {
+      "schema_version": 1,
+      "sensor_id": "sensor-demo",
+      "timestamp": 1000,
+      "service": "http-mock",
+      "category": "connection"
+    },
+    {
+      "schema_version": 1,
+      "sensor_id": "sensor-demo",
+      "timestamp": 1000,
+      "service": "http-mock",
+      "category": "connection"
+    },
+    {
+      "schema_version": 1,
+      "sensor_id": "sensor-demo",
+      "timestamp": 1000,
+      "service": "http-mock",
+      "category": "connection"
+    },
+    {
+      "schema_version": 1,
+      "sensor_id": "sensor-demo",
+      "timestamp": 1000,
+      "service": "http-mock",
+      "category": "connection"
+    }
+  ]
+}
